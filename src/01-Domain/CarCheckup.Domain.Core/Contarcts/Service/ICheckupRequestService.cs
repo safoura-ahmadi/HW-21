@@ -1,4 +1,4 @@
-﻿using CarCheckup.Domain.Core.Dtos;
+﻿using CarCheckup.Domain.Core.Dtos.CheckupRequest;
 using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Domain.Core.Enums.Car;
 
@@ -11,10 +11,13 @@ public interface ICheckupRequestService
     //Read
     List<GetCheckupRequestDto> GeByCarModel(int modelId);
     List<GetCheckupRequestDto> GetByDate(DateOnly timeToDone);
+    List<GetCheckupRequestDto> GettAll();
+    GetCheckupRequestDto? GetByCarId(int id);
     int GetDailyCount(DateOnly date);
 
     //Update
-    bool MarkAsCompleted(int id);
+    bool MarkAsAccepted(int id);
+    bool MarkAsRejected(int id);
     DateOnly? GetLastCheckupDate(CarCompanyEnum carCompany);
     public DateOnly GetLastCheckupDateByCar(int carId);
 

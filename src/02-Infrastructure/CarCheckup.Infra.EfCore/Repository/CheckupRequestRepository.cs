@@ -1,5 +1,5 @@
 ﻿using CarCheckup.Domain.Core.Contarcts.Repository;
-using CarCheckup.Domain.Core.Dtos;
+using CarCheckup.Domain.Core.Dtos.CheckupRequest;
 using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Domain.Core.Enums.Car;
 using CarCheckup.Domain.Core.Enums.checkupRequest;
@@ -92,14 +92,14 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
 
                   })];
     }
-    public bool MarkAsCompleted(int id)
+    public bool MarkAsAccepted(int id)
     {
         try
         {
             var item = _context.CheckupRequests.Find(id);
             if (item == null)
                 return false;
-            item.Status = CheckUpRequestStatusEnum.Completed;
+            item.Status = CheckUpRequestStatusEnum.Accepted;
             _context.SaveChanges();
             return true;
         }
@@ -117,8 +117,11 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
             //    .OrderByDescending(cr => cr.TimeToDone)
             //    .Select(cr => cr.TimeToDone)
             //    .FirstOrDefault();
-
-            return _context.CheckupRequests.Last(c => c.Car.Company == carCompany).TimeToDone;
+            var c = _context.CheckupRequests.AsNoTracking()
+                .OrderByDescending(cr => cr.TimeToDone)
+                .FirstOrDefault(cr => cr.Car.Company == carCompany);
+            var t = c.TimeToDone;
+            return t;
         }
         catch
         {
@@ -149,21 +152,23 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
             //  .Select(cr => cr.TimeToDone)
             //  .FirstOrDefault();
             return _context.CheckupRequests.AsNoTracking()
-                .Where(cr => cr.CarId == carId).Last().TimeToDone;
+                
+                .Where(cr => cr.CarId == carId).OrderByDescending(cr => cr.TimeToDone).First()
+                .TimeToDone;
 
         }
         catch
         {
-            return new(0, 0, 0);
+            return new(1, 1, 1);
         }
     }
-    public  bool SetRequestsToIncompleted()
+    public bool SetRequestsToIncompleted()
     {
         try
         {
             _context.CheckupRequests
                 .Where(cr => cr.TimeToDone < DateOnly.FromDateTime(DateTime.Now))
-                .ExecuteUpdate(update => update.SetProperty(cr => cr.Status, CheckUpRequestStatusEnum.InCompleted));
+                .ExecuteUpdate(update => update.SetProperty(cr => cr.Status, CheckUpRequestStatusEnum.Rejected));
             return true;
 
             // نیازی به SaveChanges نیست، ExecuteUpdate تغییرات را مستقیم در دیتابیس ذخیره می‌کند.
@@ -174,4 +179,57 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
         }
     }
 
+    public List<GetCheckupRequestDto> GettAll()
+    {
+        return [.. _context.CheckupRequests.AsNoTracking()
+            .Select(cr => new GetCheckupRequestDto
+            {
+                Id = cr.Id,
+                ModelName = cr.Car.Model.Name,
+                OwnerMeliCode = cr.Car.OwnerMeliCode,
+                Company = cr.Car.Company,
+                Status = cr.Status,
+                TimeToDone = cr.TimeToDone
+            }
+
+            )];
+    }
+
+    public bool MarkAsRejected(int id)
+    {
+        try
+        {
+            //var entry = _context.Entry(new CheckupRequest { Id = id }); 
+            //entry.Property(e => e.Status).CurrentValue = CheckUpRequestStatusEnum.InCompleted;
+            //_context.SaveChanges(); 
+            //return true;
+            var item = _context.CheckupRequests.Find(id);
+            item.Status = CheckUpRequestStatusEnum.Rejected;
+            _context.SaveChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public GetCheckupRequestDto? GetByCarId(int id)
+    {
+        return _context.CheckupRequests.AsNoTracking()
+            .Where(cr => cr.Car.Id == id).OrderByDescending(cr => cr.TimeToDone)
+            .Select(cr => new GetCheckupRequestDto
+            {
+
+                Id = cr.Id,
+                ModelName = cr.Car.Model.Name,
+                 Plate = cr.Car.Plate,
+                OwnerMeliCode = cr.Car.OwnerMeliCode,
+                Company = cr.Car.Company,
+                Status = cr.Status,
+                TimeToDone = cr.TimeToDone
+            }
+
+            ).FirstOrDefault();
+    }
 }

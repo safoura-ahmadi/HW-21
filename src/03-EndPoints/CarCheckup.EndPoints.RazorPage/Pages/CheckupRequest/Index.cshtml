@@ -1,0 +1,60 @@
+﻿@page
+@model IndexModel
+@{
+}
+
+<div class="table-responsive">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert"> @TempData["ErrorMessage"] </div>
+    }
+    <br />
+
+    <table class="table table-hover ">
+        <thead>
+            <tr>
+                <th>شرکت</th>
+                <th>مدل ماشین</th>
+                <th>کدملی مالک ماشین</th>
+                <th>زمان انجام درخواست</th>
+                <th>وضعیت درخواست</th>
+                <th>عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in Model.CheckupRequests)
+            {
+                <tr>
+                    <td>@request.Company</td>
+                    <td>@request.ModelName</td>
+                    <td>@request.OwnerMeliCode</td>
+                    <td>@request.TimeToDone</td>
+                    <td>@request.Status</td>
+                    @if (request.Status == Domain.Core.Enums.checkupRequest.CheckUpRequestStatusEnum.Pending)
+                    {
+                        <td>
+                            <a class="btn btn-success btn-sm" asp-page="MarkAsAccepted" asp-route-id="@request.Id">تایید </a>
+
+                            <a class="btn btn-danger btn-sm" asp-page="MarkAsRejected" asp-route-id="@request.Id">رد </a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <p>امکان تغییر حالت درخواست وجود ندارد</p>
+                        </td>
+
+                    }
+
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>

@@ -1,0 +1,61 @@
+﻿@page
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@model CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest.CreateModel
+@{
+}
+
+<form>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    <div class="row">
+        <div class="col-6 mb-3">
+            <label class="form-label">کدملی مالک خودرو</label>
+            <input disabled class="form-control" value="@Model.CheckupRequest.OwnerMeliCode" />
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label">پلاک خودرو</label>
+            <input disabled class="form-control" value="@Model.CheckupRequest.Plate" />
+
+        </div>
+    </div>
+
+
+    <div class="row">
+
+
+        <div class="col-6 mb-3">
+            <label class="form-label">شرکت تولید کننده ی خودرو</label>
+            <input disabled class="form-control" value="@Model.CheckupRequest.Company" />
+
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label">مدل خودرو</label>
+            <input disabled class="form-control" value="@Model.CheckupRequest.ModelName" />
+        </div>
+    </div>
+    <div class="row">
+
+        <div class="col-6 mb-3">
+            <label class="form-label">تاریخ انجام معاینه فنی</label>
+            <input disabled class="form-control" value="@Model.TimeToDone" />
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label">وضعیت انجام معاینه فنی</label>
+            <input disabled class="form-control" value="@Model.CheckupRequest.Status" />
+        </div>
+
+    </div>
+
+
+</form>

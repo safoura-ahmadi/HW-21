@@ -1,11 +1,12 @@
-﻿using CarCheckup.Domain.Core.Entities;
+﻿using CarCheckup.Domain.Core.Dtos.Car;
+using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Domain.Core.Enums.Car;
 
 namespace CarCheckup.Domain.Core.Contarcts.AppService;
 
 public interface ICarAppService
 {
-    Result Create(string plate, string ownerMeliCode, string ownerMobile, int generationYear, CarCompanyEnum company, int modelId);
-    bool IsPlateValid(string plate);
+    Result Create(Car car);
 
+    int GetCarId(string plate);
 }

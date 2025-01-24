@@ -16,7 +16,7 @@ public class CarConfiguration : IEntityTypeConfiguration<Car>
 
         builder.Property(c => c.GenerationYear)
             .IsRequired()
-            .HasColumnType("int");
+            .HasColumnType("date");
 
         builder.Property(c => c.OwnerMeliCode)
             .IsRequired()
@@ -40,8 +40,8 @@ public class CarConfiguration : IEntityTypeConfiguration<Car>
                 OwnerMobile = "09302675549",
                 Company = Domain.Core.Enums.Car.CarCompanyEnum.IranKhodro,
                 ModelId = 2,
-                GenerationYear = 1390,
-                Plate ="33و283-68"
+                GenerationYear = new(2020, 1, 1),
+                Plate = "33و283-68"
 
             },
 
@@ -52,7 +52,7 @@ public class CarConfiguration : IEntityTypeConfiguration<Car>
                 OwnerMobile = "09303685549",
                 Company = Domain.Core.Enums.Car.CarCompanyEnum.Saipa,
                 ModelId = 3,
-                GenerationYear = 1395,
+                GenerationYear = new(2025, 1, 1),
                 Plate = "99خ902-33",
 
             },
@@ -64,7 +64,7 @@ public class CarConfiguration : IEntityTypeConfiguration<Car>
                 OwnerMobile = "09302675549",
                 Company = Domain.Core.Enums.Car.CarCompanyEnum.IranKhodro,
                 ModelId = 1,
-                GenerationYear =1400,
+                GenerationYear = new(2015, 1, 1),
                 Plate = "45ر444-41"
 
             }

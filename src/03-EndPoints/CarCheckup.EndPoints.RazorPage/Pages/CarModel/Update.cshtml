@@ -1,0 +1,13 @@
+﻿@page
+@model CarCheckup.EndPoints.RazorPage.Pages.CarModel.UpdateModel
+@{
+}
+<form method="post">
+
+    <input type="hidden" class="form-control" asp-for="CarModel.Id" value="@Model.CarModel.Id" />
+        <label class="form-label" asp-for="CarModel.Name">نام مدل</label>
+        <input class="form-control" asp-for="CarModel.Name" placeholder="@Model.CarModel.Name" />
+        <span class="text-danger" asp-validation-for="CarModel.Name"></span>
+        <button type="submit" class="btn btn-primary mt-3">ثبت درخواست</button>
+   
+</form>

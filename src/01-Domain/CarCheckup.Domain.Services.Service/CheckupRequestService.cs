@@ -1,6 +1,6 @@
 ﻿using CarCheckup.Domain.Core.Contarcts.Repository;
 using CarCheckup.Domain.Core.Contarcts.Service;
-using CarCheckup.Domain.Core.Dtos;
+using CarCheckup.Domain.Core.Dtos.CheckupRequest;
 using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Domain.Core.Enums.Car;
 
@@ -24,9 +24,9 @@ public class CheckupRequestService(ICheckupRequestRepository checkupRequestRepos
         return _checkupRequestRepository.GetByDate(timeToDone);
     }
 
-    public bool MarkAsCompleted(int id)
+    public bool MarkAsAccepted(int id)
     {
-        return _checkupRequestRepository.MarkAsCompleted(id);
+        return _checkupRequestRepository.MarkAsAccepted(id);
     }
 
     public int GetDailyCount(DateOnly date)
@@ -47,5 +47,20 @@ public class CheckupRequestService(ICheckupRequestRepository checkupRequestRepos
     public bool SetRequestsToIncompleted()
     {
         return _checkupRequestRepository.SetRequestsToIncompleted();
+    }
+
+    public List<GetCheckupRequestDto> GettAll()
+    {
+        return _checkupRequestRepository.GettAll();
+    }
+
+    public bool MarkAsRejected(int id)
+    {
+        return _checkupRequestRepository.MarkAsRejected(id);
+    }
+
+    public GetCheckupRequestDto? GetByCarId(int id)
+    {
+        return _checkupRequestRepository.GetByCarId(id);
     }
 }

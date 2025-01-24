@@ -1,5 +1,6 @@
 ﻿using CarCheckup.Domain.Core.Contarcts.Repository;
 using CarCheckup.Domain.Core.Contarcts.Service;
+using CarCheckup.Domain.Core.Dtos.Car;
 using CarCheckup.Domain.Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,18 +18,13 @@ public class CarService(ICarRepository carRepository) : ICarService
         return _carRepository.Create(car);
     }
 
-    public int GetGenerationYearById(int id)
+    public GetCarDto? GetById(int id)
     {
-        return _carRepository.GetGenerationYearById(id);
+        return _carRepository.GetById(id);
     }
 
-    public bool IsCarIdValid(int id)
+    public int GetCarId(string plate)
     {
-       return _carRepository.IsCarIdValid(id);
-    }
-
-    public bool IsPlateValid(string plate)
-    {
-        return _carRepository.IsPlateValid(plate);
+        return _carRepository.GetCarId(plate);
     }
 }

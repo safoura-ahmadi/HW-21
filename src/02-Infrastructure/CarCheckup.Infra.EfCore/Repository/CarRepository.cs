@@ -1,6 +1,7 @@
 ﻿
 
 using CarCheckup.Domain.Core.Contarcts.Repository;
+using CarCheckup.Domain.Core.Dtos.Car;
 using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Infra.EfCore.Common;
 using Microsoft.EntityFrameworkCore;
@@ -18,27 +19,27 @@ public class CarRepository(CarCheckupDbContext carCheckupDbContext) : ICarReposi
         return car.Id;
     }
 
-    public int GetGenerationYearById(int id)
+    public GetCarDto? GetById(int id)
+    {
+        return _context.Cars.AsNoTracking()
+            .Where(c => c.Id == id)
+            .Select(c => new GetCarDto
+            {
+                Company = c.Company,
+                GenerationYear = c.GenerationYear
+            }).FirstOrDefault();
+    }
+
+    public int GetCarId(string plate)
     {
         try
         {
-           // return _context.Cars.Where(c => c.Id == id).Select(c => c.GenerationYear).FirstOrDefault();
-            return _context.Cars.AsNoTracking().First(c => c.Id == id).GenerationYear;
+            return _context.Cars.AsNoTracking()
+                .First(c => c.Plate == plate).Id;
         }
         catch
         {
             return 0;
         }
-    }
-
-    public bool IsPlateValid(string plate)
-    {
-        if (_context.Cars.AsNoTracking().Any(c => c.Plate == plate))
-            return false;
-        return true;
-    }
-    public bool IsCarIdValid(int id)
-    {
-        return _context.Cars.AsNoTracking().Any(c => c.Id == id);
     }
 }

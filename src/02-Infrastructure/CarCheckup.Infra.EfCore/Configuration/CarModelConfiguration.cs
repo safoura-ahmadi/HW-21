@@ -13,7 +13,8 @@ public class CarModelConfiguration : IEntityTypeConfiguration<CarModel>
 
         builder.HasMany(cm => cm.Cars)
             .WithOne(c => c.Model)
-            .HasForeignKey(c => c.ModelId);
+            .HasForeignKey(c => c.ModelId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasData
         (

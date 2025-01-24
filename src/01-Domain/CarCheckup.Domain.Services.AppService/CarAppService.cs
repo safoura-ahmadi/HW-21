@@ -9,29 +9,20 @@ public class CarAppService(ICarService carService) : ICarAppService
 {
     private readonly ICarService _carService = carService;
 
-    public Result Create(string plate, string ownerMeliCode, string ownerMobile, int generationYear, CarCompanyEnum company, int modelId)
+    public Result Create(Car car)
     {
-        if (!IsPlateValid(plate))
-        {
-            return new Result(false, "شماره پلاک تکراری است");
-        }
-        var item = new Car()
-        {
-            OwnerMeliCode = ownerMeliCode,
-            OwnerMobile = ownerMobile,
-            Company = company,
-            ModelId = modelId,
-            GenerationYear = generationYear,
-            Plate = plate,
-
-        };
-        var id = _carService.Create(item);
+        var id = _carService.Create(car);
         if (id > 0)
-            return new Result (true);
-        return new Result(false,"DataBase Erro Raised");
+        {
+            car.Id = id;
+            return new Result(true);
+        }
+       
+        return new Result(false, "DataBase Erro Raised");
     }
-    public bool IsPlateValid(string plate)
+
+    public int GetCarId(string plate)
     {
-        return _carService.IsPlateValid(plate);
+        return _carService.GetCarId(plate);
     }
 }
