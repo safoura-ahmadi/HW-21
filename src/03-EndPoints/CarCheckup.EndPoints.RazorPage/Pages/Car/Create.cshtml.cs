@@ -7,25 +7,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CarCheckup.EndPoints.RazorPage.Pages.Car
 {
-    public class CreateModel(ICarAppService carAppService,ICarModelAppService carModelAppService) : PageModel
+    public class CreateModel(ICarAppService carAppService, ICarModelAppService carModelAppService) : PageModel
     {
         private readonly ICarAppService _carAppService = carAppService;
         private readonly ICarModelAppService _carModelAppService = carModelAppService;
         [BindProperty]
-        public Domain.Core.Entities.Car Car { get; set; } = null!;//?
+        public Domain.Core.Dtos.Car.CreateCarDto Car { get; set; } = null!;//?
         [BindProperty]
         public List<CarCheckup.Domain.Core.Entities.CarModel> Models { get; set; } = [];
         [BindProperty]
         public List<CarCompanyEnum> Companies { get; set; } = [];
-        [BindProperty]
-        [Required(ErrorMessage = "سال شمسی نمی‌تواند خالی باشد.")]
-        [Range(1340, 1403, ErrorMessage = "سال شمسی باید بین 1340 تا 1403 باشد.")]
-        public int ShamsiYear { get; set; }
         public void OnGet()
         {
             Companies = Enum.GetValues<CarCompanyEnum>().Cast<CarCompanyEnum>().ToList();
             Models = _carModelAppService.GetAll();
-          
+
         }
         public IActionResult OnPost()
         {
@@ -43,25 +39,12 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.Car
                     return RedirectToPage("/CheckupRequest/Create", new { id });
 
                 }
-                var pc = new PersianCalendar();
-                var shamiDate = pc.ToDateTime(ShamsiYear, 1, 1, 0, 0, 0, 0);
-                var miladiDate = shamiDate.ToUniversalTime();
-                Car.GenerationYear = DateOnly.FromDateTime(miladiDate);
-                var result = _carAppService.Create(Car);
-                if(!result.IsSuccess)
-                {
-                    TempData["ErrorMessage"] = result.Message;
-                   
-                }
-                else
-                {
 
-                    return RedirectToPage("/CheckupRequest/Create", new { id = Car.Id });
+                id = _carAppService.Create(Car);
+                return RedirectToPage("/CheckupRequest/Create", new { id });
 
-                }
+
             }
-            return Page();
-           
 
         }
         private void LoadPageData()

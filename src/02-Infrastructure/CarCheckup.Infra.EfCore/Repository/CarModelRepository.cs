@@ -29,9 +29,8 @@ public class CarModelRepository(CarCheckupDbContext carCheckupDbContext) : ICarM
     {
         try
         {
-            var item = _context.CarModels.Find(id);
-            if (item != null)
-                _context.CarModels.Remove(item);
+            var item = _context.CarModels.First(cm => cm.Id == id);
+            _context.CarModels.Remove(item);
             _context.SaveChanges();
             return true;
         }
@@ -56,9 +55,8 @@ public class CarModelRepository(CarCheckupDbContext carCheckupDbContext) : ICarM
     {
         try
         {
-            var item = _context.CarModels.Find(id);
-            if (item != null)
-                item.Name = name;
+            var item = _context.CarModels.First(cm => cm.Id == id);
+            item.Name = name;
             _context.SaveChanges();
             return true;
         }

@@ -16,7 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 #region Configuration
 var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 var siteSettings = configuration.GetSection("SiteSettings").Get<SiteSettings>();
-builder.Services.AddSingleton(siteSettings);
+if (siteSettings != null)
+    builder.Services.AddSingleton(siteSettings);
 #endregion
 
 // Add services to the container.
@@ -34,7 +35,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddScoped<ICheckupRequestAppService, CheckupRequestAppService>();
 builder.Services.AddScoped<ICheckupRequestService, CheckupRequestService>();
 builder.Services.AddScoped<ICheckupRequestRepository, CheckupRequestRepository>();
-builder.Services.AddScoped<IRejectedCheckupRequestService, RejectedCheckupRequestRipository>();
+builder.Services.AddScoped<IRejectedCheckupRequestService, RejectedCheckupRequestService>();
 builder.Services.AddScoped<IRejectedCheckupRequestRepository, RejectedCheckupRequestRepository>();
 builder.Services.AddScoped<ICarAppService, CarAppService>();
 builder.Services.AddScoped<ICarService, CarService>();

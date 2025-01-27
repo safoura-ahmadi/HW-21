@@ -6,7 +6,7 @@ namespace CarCheckup.Domain.Core.Contarcts.AppService;
 
 public interface ICarAppService
 {
-    Result Create(Car car);
+    int Create(CreateCarDto car);
 
     int GetCarId(string plate);
 }

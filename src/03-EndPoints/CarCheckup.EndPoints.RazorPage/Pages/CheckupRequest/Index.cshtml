@@ -16,7 +16,14 @@
     }
     <br />
 
+    <div class="search-bar">
+        <form method="get" class="form-inline mb-3">
+            <input type="text" asp-for="SearchQuery" class="form-control mr-2" placeholder="جستجو کنید..." />
+            <button type="submit" class="btn btn-primary mb-3">جستجو</button>
+        </form>
+    </div>
     <table class="table table-hover ">
+     
         <thead>
             <tr>
                 <th>شرکت</th>

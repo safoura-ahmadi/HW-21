@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00-Frameworks", "00-Framewo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calendar", "src\00-Frameworks\Calendar\Calendar.csproj", "{0FD14D1A-0A00-4017-9174-E2A7B7E6A7B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarCheckup.EndPoints.Api", "src\03-EndPoints\CarCheckup.EndPoints.Api\CarCheckup.EndPoints.Api.csproj", "{30DB1058-8B7B-4E38-A0AE-646077B44A69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,10 @@ Global
 		{0FD14D1A-0A00-4017-9174-E2A7B7E6A7B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FD14D1A-0A00-4017-9174-E2A7B7E6A7B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FD14D1A-0A00-4017-9174-E2A7B7E6A7B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30DB1058-8B7B-4E38-A0AE-646077B44A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30DB1058-8B7B-4E38-A0AE-646077B44A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30DB1058-8B7B-4E38-A0AE-646077B44A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30DB1058-8B7B-4E38-A0AE-646077B44A69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,5 +82,6 @@ Global
 		{E3AE2ED3-69C2-4CCC-A519-9B17E471EFA1} = {CE96A6E3-119E-4430-A7BF-70C31C4C2C8C}
 		{A29E08D1-B7E9-45D5-B2E6-BD2669DB0782} = {ACF55F69-A4DA-456D-B58F-61966B6A0168}
 		{0FD14D1A-0A00-4017-9174-E2A7B7E6A7B7} = {A29E08D1-B7E9-45D5-B2E6-BD2669DB0782}
+		{30DB1058-8B7B-4E38-A0AE-646077B44A69} = {8A78ABFF-1B0A-4075-8F17-5849C0D90E79}
 	EndGlobalSection
 EndGlobal

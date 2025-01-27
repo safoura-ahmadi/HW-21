@@ -22,27 +22,36 @@ public static class DaysOfWeek
     }
     public static DateOnly FindNextOddDay(DateOnly date)
     {
-        if (date.DayOfWeek == DayOfWeek.Thursday)
-            return date.AddDays(3);
+        do
+        {
+            if (date.DayOfWeek == DayOfWeek.Thursday)
+                date = date.AddDays(3);
 
-        else if (GetDayType(date) == "Odd" || date.DayOfWeek == DayOfWeek.Friday)
-            return date.AddDays(2);
-        else
+            else if (GetDayType(date) == "Odd" || date.DayOfWeek == DayOfWeek.Friday)
+                date = date.AddDays(2);
+            else
 
-            return date.AddDays(2);
-
+                date = date.AddDays(2);
+        } while (date < DateOnly.FromDateTime(DateTime.Now));
+        return date;
     }
+
+
     public static DateOnly FindNextEvenDay(DateOnly date)
     {
-        if (date.DayOfWeek == DayOfWeek.Wednesday)
-            return date.AddDays(3);
+        do
+        {
+            if (date.DayOfWeek == DayOfWeek.Wednesday)
+                date = date.AddDays(3);
 
-        if (GetDayType(date) == "Even" || date.DayOfWeek == DayOfWeek.Thursday)
-            return date.AddDays(2);
-        else
-            return date.AddDays(1);
+            if (GetDayType(date) == "Even" || date.DayOfWeek == DayOfWeek.Thursday)
+                date = date.AddDays(2);
+            else
+                date = date.AddDays(1);
 
 
+        } while (date <= DateOnly.FromDateTime(DateTime.Now));
+        return date;
     }
 
     public static string GetNameOfDay(DateOnly date)

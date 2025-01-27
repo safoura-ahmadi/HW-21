@@ -1,7 +1,9 @@
 ﻿using CarCheckup.Domain.Core.Contarcts.AppService;
 using CarCheckup.Domain.Core.Contarcts.Service;
+using CarCheckup.Domain.Core.Dtos.Car;
 using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Domain.Core.Enums.Car;
+using System.Globalization;
 
 namespace CarCheckup.Domain.Services.AppService;
 
@@ -9,16 +11,23 @@ public class CarAppService(ICarService carService) : ICarAppService
 {
     private readonly ICarService _carService = carService;
 
-    public Result Create(Car car)
+    public int Create(CreateCarDto car)
     {
-        var id = _carService.Create(car);
-        if (id > 0)
+        var pc = new PersianCalendar();
+        var shamiDate = pc.ToDateTime(car.ShamsiYear, 1, 1, 0, 0, 0, 0);
+        var miladiDate = shamiDate.ToUniversalTime();
+         
+        var item = new Car()
         {
-            car.Id = id;
-            return new Result(true);
-        }
-       
-        return new Result(false, "DataBase Erro Raised");
+            OwnerMeliCode = car.OwnerMeliCode,
+            OwnerMobile = car.OwnerMobile,
+            Plate = car.Plate,
+            ModelId = car.ModelId,
+            Company = car.Company,
+            GenerationYear = DateOnly.FromDateTime(miladiDate)
+        };
+        return _carService.Create(item);
+
     }
 
     public int GetCarId(string plate)

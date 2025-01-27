@@ -70,7 +70,7 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
         bool isOddDayRequired = !isIranKhodro; // سایپا فقط روزهای فرد
 
         // بررسی زوج یا فرد بودن روز
-        bool isCurrentDayEven = DaysOfWeek.GetDayType(date) == "Even";
+        bool isCurrentDayEven = DaysOfWeek.GetDayType(currentDate) == "Even";
 
         if ((isEvenDayRequired && !isCurrentDayEven))
         {
