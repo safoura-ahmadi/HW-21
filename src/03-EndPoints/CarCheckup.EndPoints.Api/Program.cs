@@ -4,6 +4,7 @@ using CarCheckup.Domain.Core.Contarcts.Service;
 using CarCheckup.Domain.Core.Entities.Configs;
 using CarCheckup.Domain.Services.AppService;
 using CarCheckup.Domain.Services.Service;
+using CarCheckup.EndPoints.Api.Middleware;
 using CarCheckup.Infra.EfCore.Common;
 using CarCheckup.Infra.EfCore.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -43,11 +44,11 @@ if (app.Environment.IsDevelopment())
     //app.UseSwaggerUI();  // فعال کردن رابط Swagger UI
 
 }
-
+app.UseApiKeyValidation();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseApiKeyValidation();
 app.Run();
