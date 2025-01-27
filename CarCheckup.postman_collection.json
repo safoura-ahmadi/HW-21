@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "0a8de42f-2e97-470e-b61d-945d7bf3e83e",
+		"name": "CarCheckup",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41551898"
+	},
+	"item": [
+		{
+			"name": "CarModel",
+			"item": [
+				{
+					"name": "CarModel/Create",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "apikey",
+								"value": "5e0f1536-3e2d-4b8f-9d1a-1f2a68a4d7d1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7165/api/CarModel/Create?name=زانتیا",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7165",
+							"path": [
+								"api",
+								"CarModel",
+								"Create"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "زانتیا"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CarModel/GetAll",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "5e0f1536-3e2d-4b8f-9d1a-1f2a68a4d7d1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7165/api/CarModel/GetAll",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7165",
+							"path": [
+								"api",
+								"CarModel",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CarModel/Get",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "apikey",
+								"value": "5e0f1536-3e2d-4b8f-9d1a-1f2a68a4d7d1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7165/api/CarModel/Get?id=5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7165",
+							"path": [
+								"api",
+								"CarModel",
+								"Get"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CarModel/Update",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain;charset=UTF-8"
+							},
+							{
+								"key": "apikey",
+								"value": "5e0f1536-3e2d-4b8f-9d1a-1f2a68a4d7d1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7165/api/CarModel/Update?id=15&name=quick",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7165",
+							"path": [
+								"api",
+								"CarModel",
+								"Update"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "15"
+								},
+								{
+									"key": "name",
+									"value": "quick"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CarModel/Delete",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "text/plain;charset=UTF-8"
+							},
+							{
+								"key": "apikey",
+								"value": "5e0f1536-3e2d-4b8f-9d1a-1f2a68a4d7d1",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7165/api/CarModel/Delete?id=1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7165",
+							"path": [
+								"api",
+								"CarModel",
+								"Delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CheckupRequest",
+			"item": [
+				{
+					"name": "CheckupRequest/Create",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"plate\": \"13ق133-68\",\n  \"shamsiYear\": 1400,\n  \"ownerMeliCode\": \"0312789561\",\n  \"ownerMobile\": \"09306785578\",\n  \"modelId\": 5,\n  \"company\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7165/api/CheckupRequest/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7165",
+							"path": [
+								"api",
+								"CheckupRequest",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
