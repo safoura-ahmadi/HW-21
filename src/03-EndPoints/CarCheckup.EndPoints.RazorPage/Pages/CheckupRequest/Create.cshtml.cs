@@ -15,14 +15,14 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
 
-        public IActionResult OnGet()
+        public async  Task<IActionResult> OnGet(CancellationToken cancellationToken)
         {
 
-            var result = _checkupRequestAppService.Create(Id);
+            var result = await _checkupRequestAppService.Create(Id, cancellationToken);
             if (result.IsSuccess)
             {
                 TempData["SuccessMessage"] = result.Message;
-                var checkupRequest = _checkupRequestAppService.GetByCarId(Id);
+                var checkupRequest = await _checkupRequestAppService.GetByCarId(Id, cancellationToken);
                 if (checkupRequest != null)
                 {
                     CheckupRequest = checkupRequest;

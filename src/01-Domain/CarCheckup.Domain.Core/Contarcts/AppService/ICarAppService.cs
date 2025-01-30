@@ -6,7 +6,7 @@ namespace CarCheckup.Domain.Core.Contarcts.AppService;
 
 public interface ICarAppService
 {
-    int Create(CarDto car);
-    CarDto? Get(int id);
-    int GetCarId(string plate);
+    Task<int> Create(CarDto car,CancellationToken cancellationToken);
+    Task<CarDto?> Get(int id,CancellationToken cancellationToken);
+    Task<int> GetCarId(string plate, CancellationToken cancellationToken);
 }

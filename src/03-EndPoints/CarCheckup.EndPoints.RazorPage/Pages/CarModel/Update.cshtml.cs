@@ -10,11 +10,11 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CarModel
         [BindProperty]
         public CarCheckup.Domain.Core.Entities.CarModel CarModel { get; set; } = null!;
 
-        public IActionResult OnGet(int id)
+        public async Task<IActionResult> OnGet(int id,CancellationToken cancellationToken)
         {
             if (HttpContext.Session.GetString("isLogin") == "True")
             {
-                var item = _carModelAppService.GetById(id);
+                var item = await _carModelAppService.GetById(id, cancellationToken);
                 if (item == null)
                 {
                     return RedirectToPage("Index");
@@ -24,11 +24,11 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CarModel
             }
             return RedirectToPage("/Operator/Index");
         }
-        public IActionResult OnPost()
+        public async Task< IActionResult> OnPost(CancellationToken cancellationToken)
         {
             if (HttpContext.Session.GetString("isLogin") == "True")
             {
-                var result = _carModelAppService.UpdateName(CarModel.Id, CarModel.Name);
+                var result = await _carModelAppService.UpdateName(CarModel.Id, CarModel.Name,cancellationToken);
                 if (result.IsSuccess)
                 {
                     TempData["SuccessMessage"] = result.Message;

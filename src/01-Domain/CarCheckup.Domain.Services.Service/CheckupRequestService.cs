@@ -9,58 +9,58 @@ namespace CarCheckup.Domain.Services.Service;
 public class CheckupRequestService(ICheckupRequestRepository checkupRequestRepository) : ICheckupRequestService
 {
     private readonly ICheckupRequestRepository _checkupRequestRepository = checkupRequestRepository;
-    public bool Create(CheckupRequest checkupRequest)
+    public async Task<bool> Create(CheckupRequest checkupRequest, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.Create(checkupRequest);
+        return await _checkupRequestRepository.Create(checkupRequest, cancellationToken);
     }
 
-    public List<GetCheckupRequestDto> GeByCarModel(int modelId)
+    public async Task<List<GetCheckupRequestDto>> GeByCarModel(int modelId, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.GeByCarModel(modelId);
+        return await _checkupRequestRepository.GeByCarModel(modelId, cancellationToken);
     }
 
-    public List<GetCheckupRequestDto> GetByDate(DateOnly timeToDone)
+    public async Task<List<GetCheckupRequestDto>> GetByDate(DateOnly timeToDone, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.GetByDate(timeToDone);
+        return await _checkupRequestRepository.GetByDate(timeToDone, cancellationToken);
     }
 
-    public bool MarkAsAccepted(int id)
+    public async Task<bool> MarkAsAccepted(int id, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.MarkAsAccepted(id);
+        return await _checkupRequestRepository.MarkAsAccepted(id, cancellationToken);
     }
 
-    public int GetDailyCount(DateOnly date)
+    public async Task<int> GetDailyCount(DateOnly date, CancellationToken cancellationToken)
     {
-       return _checkupRequestRepository.GetDailyCount(date);
+        return await _checkupRequestRepository.GetDailyCount(date, cancellationToken);
     }
 
-    public DateOnly? GetLastCheckupDate(CarCompanyEnum carCompany)
+    public async Task<DateOnly?> GetLastCheckupDate(CarCompanyEnum carCompany, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.GetLastCheckupDate(carCompany);
+        return await _checkupRequestRepository.GetLastCheckupDate(carCompany, cancellationToken);
     }
 
-    public DateOnly GetLastCheckupDateByCar(int carId)
+    public async Task<DateOnly> GetLastCheckupDateByCar(int carId, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.GetLastCheckupDateByCar(carId);
+        return await _checkupRequestRepository.GetLastCheckupDateByCar(carId, cancellationToken);
     }
 
-    public bool SetRequestsToIncompleted()
+    public async Task<bool> SetRequestsToIncompleted(CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.SetRequestsToIncompleted();
+        return await _checkupRequestRepository.SetRequestsToIncompleted(cancellationToken);
     }
 
-    public List<GetCheckupRequestDto> GettAll()
+    public async Task<List<GetCheckupRequestDto>> GettAll(CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.GettAll();
+        return await _checkupRequestRepository.GettAll(cancellationToken);
     }
 
-    public bool MarkAsRejected(int id)
+    public async Task<bool> MarkAsRejected(int id, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.MarkAsRejected(id);
+        return await _checkupRequestRepository.MarkAsRejected(id, cancellationToken);
     }
 
-    public GetCheckupRequestDto? GetByCarId(int id)
+    public async Task<GetCheckupRequestDto?> GetByCarId(int id, CancellationToken cancellationToken)
     {
-        return _checkupRequestRepository.GetByCarId(id);
+        return await _checkupRequestRepository.GetByCarId(id, cancellationToken);
     }
 }

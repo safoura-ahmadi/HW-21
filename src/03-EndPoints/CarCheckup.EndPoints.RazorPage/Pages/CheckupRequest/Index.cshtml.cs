@@ -16,7 +16,7 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
         public List<GetCheckupRequestDto> CheckupRequests { get; set; } = null!;
         [BindProperty(SupportsGet = true)]
         public string? SearchQuery { get; set; }
-        public IActionResult OnGet()
+        public async Task< IActionResult> OnGet(CancellationToken cancellationToken)
         {
             if (HttpContext.Session.GetString("isLogin") == "True")
             {
@@ -32,16 +32,16 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
                         int day = int.Parse(SearchQuery.Substring(0, 2));
                         var shamiDate = pc.ToDateTime(year, month, day, 0, 0, 0, 0);
                         var date = DateOnly.FromDateTime(shamiDate);
-                        CheckupRequests = _checkupRequestAppService.GetByDate(DateOnly.FromDateTime(DateTime.Now));
+                        CheckupRequests = await _checkupRequestAppService.GetByDate(DateOnly.FromDateTime(DateTime.Now),cancellationToken);
                         return Page();
                     }
                     catch
                     {
-                        CheckupRequests = _checkupRequestAppService.GettAll();
+                        CheckupRequests = await _checkupRequestAppService.GettAll(cancellationToken);
                         return Page();
                     }
                 }
-                CheckupRequests = _checkupRequestAppService.GettAll();
+                CheckupRequests = await _checkupRequestAppService.GettAll(cancellationToken);
                 return Page();
 
             }

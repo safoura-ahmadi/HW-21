@@ -8,28 +8,28 @@ public class CarModelService(ICarModelRepository carModelRepository) : ICarModel
 {
     private readonly ICarModelRepository _carModelRepository = carModelRepository;
 
-    public bool Create(string name)
+    public async Task<bool> Create(string name, CancellationToken cancellationToken)
     {
-        return _carModelRepository.Create(name);
+        return await _carModelRepository.Create(name, cancellationToken);
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id, CancellationToken cancellationToken)
     {
-        return (_carModelRepository.Delete(id));
+        return await (_carModelRepository.Delete(id, cancellationToken));
     }
 
-    public List<CarModel> GetAll()
+    public async Task<List<CarModel>> GetAll(CancellationToken cancellationToken)
     {
-        return _carModelRepository.GetAll();
+        return await _carModelRepository.GetAll(cancellationToken);
     }
 
-    public CarModel GetById(int id)
+    public async Task<CarModel> GetById(int id, CancellationToken cancellationToken)
     {
-        return _carModelRepository.GetById(id);
+        return await _carModelRepository.GetById(id, cancellationToken);
     }
 
-    public bool UpdateName(int id, string name)
+    public async Task<bool> UpdateName(int id, string name, CancellationToken cancellationToken)
     {
-        return _carModelRepository.UpdateName(id, name);
+        return await _carModelRepository.UpdateName(id, name, cancellationToken);
     }
 }

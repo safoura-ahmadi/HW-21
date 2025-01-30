@@ -6,8 +6,8 @@ namespace CarCheckup.Domain.Services.Service;
 public class OperatorService(IOperatorRepository operatorRepository) : IOperatorService
 {
     private readonly IOperatorRepository _operatorRepository = operatorRepository;
-    public bool Login(string username, string password)
+    public async Task<bool> Login(string username, string password, CancellationToken cancellationToken)
     {
-        return _operatorRepository.Login(username, password);
+        return await _operatorRepository.Login(username, password, cancellationToken);
     }
 }

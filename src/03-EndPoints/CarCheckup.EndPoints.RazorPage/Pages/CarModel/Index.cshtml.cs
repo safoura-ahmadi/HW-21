@@ -9,11 +9,11 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CarModel
         private readonly ICarModelAppService _carModelAppService = carModelAppService;
         [BindProperty]
         public List<CarCheckup.Domain.Core.Entities.CarModel> CarModels { get; set; } = null!;
-        public IActionResult OnGet()
+        public async Task< IActionResult> OnGet(CancellationToken cancellationToken)
         {
             if (HttpContext.Session.GetString("isLogin") == "True")
             {
-                CarModels = _carModelAppService.GetAll();
+                CarModels = await _carModelAppService.GetAll(cancellationToken);
                 return Page();
             }
             return RedirectToPage("/Operator/Index");

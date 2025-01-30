@@ -4,9 +4,9 @@ namespace CarCheckup.Domain.Core.Contarcts.Service;
 
 public interface ICarModelService
 {
-    CarModel GetById(int id);
-    List<CarModel> GetAll();
-    bool Create(string name);
-    bool UpdateName(int id, string name);
-    bool Delete(int id);
+    Task<CarModel> GetById(int id, CancellationToken cancellationToken);
+    Task<List<CarModel>> GetAll(CancellationToken cancellationToken);
+    Task<bool> Create(string name, CancellationToken cancellationToken);
+    Task<bool> UpdateName(int id, string name, CancellationToken cancellationToken);
+    Task<bool> Delete(int id, CancellationToken cancellationToken);
 }

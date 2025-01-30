@@ -6,8 +6,8 @@ namespace CarCheckup.Domain.Services.Service;
 public class RejectedCheckupRequestService(IRejectedCheckupRequestRepository rejectedCheckupRequestRepository) : IRejectedCheckupRequestService
 {
     private readonly IRejectedCheckupRequestRepository _rejectedCheckupRequestRepository = rejectedCheckupRequestRepository;
-    public void Create(int carId)
+    public async Task Create(int carId, CancellationToken cancellationToken)
     {
-        _rejectedCheckupRequestRepository.Create(carId);
+        await _rejectedCheckupRequestRepository.Create(carId, cancellationToken);
     }
 }

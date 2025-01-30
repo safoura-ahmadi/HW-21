@@ -8,11 +8,11 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CarModel
     public class DeleteModel(ICarModelAppService carModelAppService) : PageModel
     {
         private readonly ICarModelAppService _carModelAppService = carModelAppService;
-        public IActionResult OnGet(int id)
+        public async Task< IActionResult> OnGet(int id,CancellationToken cancellationToken)
         {
             if (HttpContext.Session.GetString("isLogin") == "True")
             {
-                var result = _carModelAppService.Delete(id);
+                var result = await _carModelAppService.Delete(id, cancellationToken);
                 if (result.IsSuccess)
                 {
                     TempData["SuccessMessage"] = result.Message;

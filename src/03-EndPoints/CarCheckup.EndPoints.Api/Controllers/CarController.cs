@@ -11,7 +11,7 @@ namespace CarCheckup.EndPoints.Api.Controllers
     public class CarController(ICarAppService carAppService) : ControllerBase
     {
         [HttpPost("create")]
-        public IActionResult Create([FromBody] CarDto car)
+        public async Task< IActionResult> Create([FromBody] CarDto car,CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
             {
@@ -22,19 +22,19 @@ namespace CarCheckup.EndPoints.Api.Controllers
                 return BadRequest("Car Data is Required");
             }
 
-            var carId = carAppService.GetCarId(car.Plate);
+            var carId = await carAppService.GetCarId(car.Plate,cancellationToken);
             if (carId == 0)
             {
-                carId = carAppService.Create(car);
+                carId = await carAppService.Create(car, cancellationToken);
                 if (carId == 0)
                     return BadRequest("you Entered Invalid ModelId");
             }
             return CreatedAtAction(nameof(Get), new { id = carId }, carId);
         }
         [HttpGet("get")]
-        public IActionResult Get(int id)
+        public async Task< IActionResult> Get(int id,CancellationToken cancellationToken)
         {
-            var car = carAppService.Get(id);
+            var car = await carAppService.Get(id, cancellationToken);
             if (car is null)
                 return NotFound();
             return Ok(car);

@@ -18,16 +18,16 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
     private readonly ICarService _carService = carService;
     private readonly SiteSettings _siteSettings = siteSettings;
 
-    public Result Create(int carId)
+    public async Task<Result> Create(int carId, CancellationToken cancellationToken)
     {
 
         if (carId < 0)
             return new Result(false, "خودرویی با این مشخصات وجود ندارد");
-        var car = _carService.GetById(carId);
+        var car = await _carService.GetById(carId, cancellationToken);
         if (car == null)
             return new Result(false, "خودرویی با این مشخصات وجود ندارد");
-        var date = _checkupRequestService.GetLastCheckupDateByCar(carId).Year;
-        if (date == DateTime.Now.Year)
+        var date = await _checkupRequestService.GetLastCheckupDateByCar(carId, cancellationToken);
+        if (date.Year == DateTime.Now.Year)
             return new Result(false, "تعداد مجاز ثبت معاینه فنی یکبار در سال است");
 
         DateOnly generationDate = car.GenerationYear;
@@ -35,11 +35,11 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
             return new Result(false, "سال ساخت ماشین یافت نشد");
         if (generationDate.AddYears(5) <= DateOnly.FromDateTime(DateTime.Now))
         {
-            _rejectedCheckupRequestService.Create(carId);
+            await _rejectedCheckupRequestService.Create(carId, cancellationToken);
             return new Result(false, "ثبت معاینه فنی برای خودرو هایی با سال ساخت بیش از 5 سال مجاز نیست");
 
         }
-        var timeToDone = DetermineTimetoDone(car.Company);
+        var timeToDone = await DetermineTimetoDone(car.Company, cancellationToken);
         if (timeToDone < DateOnly.FromDateTime(DateTime.Now))
             return new Result(false, "تاریخ مناسب برای معاینه فنی یافت نشد");
         var item = new CheckupRequest()
@@ -49,16 +49,16 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
             TimeToDone = timeToDone
 
         };
-        var result = _checkupRequestService.Create(item);
+        var result = await _checkupRequestService.Create(item, cancellationToken);
         if (result)
             return new Result(true, "درخواست شما با موفقیت ثبت شد");
         return new Result(false, "DataBase Error Raised");
 
     }
-    public DateOnly DetermineTimetoDone(CarCompanyEnum carCompany)
+    public async Task<DateOnly> DetermineTimetoDone(CarCompanyEnum carCompany, CancellationToken cancellationToken)
     {
 
-        var lastDate = _checkupRequestService.GetLastCheckupDate(carCompany);
+        var lastDate = await _checkupRequestService.GetLastCheckupDate(carCompany, cancellationToken);
         var currentDate = DateOnly.FromDateTime(DateTime.Now);
 
         // اگر تاریخ قبلی وجود نداشته باشد، از تاریخ امروز استفاده می‌شود
@@ -89,7 +89,7 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
             : _siteSettings.Limitation.Saipa;
 
         // بررسی محدودیت‌ها و تنظیم تاریخ
-        while (_checkupRequestService.GetDailyCount(date) >= dailyLimit)
+        while (await _checkupRequestService.GetDailyCount(date, cancellationToken) >= dailyLimit)
         {
             // اگر محدودیت پر است، ۲ روز اضافه می‌کنیم تا زوج/فرد بودن حفظ شود
             date = DateOnly.FromDateTime(date.ToDateTime(TimeOnly.MinValue).AddDays(2));
@@ -99,30 +99,30 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
     }
 
 
-    public List<GetCheckupRequestDto> GeByCarModel(int modelId)
+    public async Task<List<GetCheckupRequestDto>> GeByCarModel(int modelId, CancellationToken cancellationToken)
     {
         if (modelId <= 0)
             return [];
-        return _checkupRequestService.GeByCarModel(modelId);
+        return await _checkupRequestService.GeByCarModel(modelId, cancellationToken);
     }
 
-    public List<GetCheckupRequestDto> GetByDate(DateOnly timeToDone)
+    public async Task<List<GetCheckupRequestDto>> GetByDate(DateOnly timeToDone, CancellationToken cancellationToken)
     {
         if (timeToDone.Year <= 0)
             return [];
-        return _checkupRequestService.GetByDate(timeToDone);
+        return await _checkupRequestService.GetByDate(timeToDone, cancellationToken);
     }
 
-    public List<GetCheckupRequestDto> GettAll()
+    public async Task<List<GetCheckupRequestDto>> GettAll(CancellationToken cancellationToken)
     {
-        return _checkupRequestService.GettAll();
+        return await _checkupRequestService.GettAll(cancellationToken);
     }
 
-    public GetCheckupRequestDto? GetByCarId(int id)
+    public async Task<GetCheckupRequestDto?> GetByCarId(int id, CancellationToken cancellationToken)
     {
         if (id <= 0)
             return null;
-        var checkupRequest = _checkupRequestService.GetByCarId(id);
+        var checkupRequest = await _checkupRequestService.GetByCarId(id, cancellationToken);
         if (checkupRequest != null)
         {
 
@@ -144,27 +144,27 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
         var result = $"{shamsiYear}/{shamsiMonth}/{shamsiDay} - {Calendar.DaysOfWeek.GetNameOfDay(date)}";
         return result;
     }
-    public Result MarkAsAccepted(int id)
+    public async Task<Result> MarkAsAccepted(int id, CancellationToken cancellationToken)
     {
         if (id <= 0)
             return new Result(false, "ایتم انتخاب شده نامعتبر است");
-        if (!_checkupRequestService.MarkAsAccepted(id))
+        if (!await _checkupRequestService.MarkAsAccepted(id, cancellationToken))
             return new Result(false, "این ایدی در دیتا بیس موجود نیست");
         return new Result(true, "وضعیت درخواست معاینه فنی به حالت تایید شده تغییر یافت");
 
     }
 
-    public Result MarkAsRejected(int id)
+    public async Task<Result> MarkAsRejected(int id, CancellationToken cancellationToken)
     {
         if (id <= 0)
             return new Result(false, "ایتم انتخاب شده نامعتبر است");
-        if (!_checkupRequestService.MarkAsRejected(id))
+        if (!await _checkupRequestService.MarkAsRejected(id, cancellationToken))
             return new Result(false, "این ایدی در دیتا بیس موجود نیست");
         return new Result(true, "وضعیت درخواست معاینه فنی به حالت رد شده تغییر یافت");
     }
 
-    public bool SetRequestsToIncompleted()
+    public async Task<bool> SetRequestsToIncompleted(CancellationToken cancellationToken)
     {
-        return _checkupRequestService.SetRequestsToIncompleted();
+        return await _checkupRequestService.SetRequestsToIncompleted(cancellationToken);
     }
 }

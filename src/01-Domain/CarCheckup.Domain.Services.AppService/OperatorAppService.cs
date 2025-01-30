@@ -7,8 +7,8 @@ public class OperatorAppService(IOperatorService operatorService) : IOperatorApp
 {
     private readonly IOperatorService _operatorService = operatorService;
 
-    public bool Login(string username, string password)
+    public async Task< bool> Login(string username, string password,CancellationToken cancellationToken)
     {
-        return _operatorService.Login(username, password);
+        return await _operatorService.Login(username, password, cancellationToken);
     }
 }

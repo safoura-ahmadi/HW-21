@@ -12,12 +12,12 @@ public class CarRepository(CarCheckupDbContext carCheckupDbContext) : ICarReposi
 {
     private readonly CarCheckupDbContext _context = carCheckupDbContext;
 
-    public int Create(Car car)
+    public async Task<int> Create(Car car, CancellationToken cancellationToken)
     {
         try
         {
-            _context.Cars.Add(car);
-            _context.SaveChanges();
+            await _context.Cars.AddAsync(car, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
         catch { }
 
@@ -26,20 +26,20 @@ public class CarRepository(CarCheckupDbContext carCheckupDbContext) : ICarReposi
 
     }
 
-    public GetCarDto? GetById(int id)
+    public async Task< GetCarDto?> GetById(int id,CancellationToken cancellationToken)
     {
-        return _context.Cars.AsNoTracking()
+        return await _context.Cars.AsNoTracking()
             .Where(c => c.Id == id)
             .Select(c => new GetCarDto
             {
                 Company = c.Company,
                 GenerationYear = c.GenerationYear
-            }).FirstOrDefault();
+            }).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public CarDto? Get(int id)
+    public async Task< CarDto?> Get(int id, CancellationToken cancellationToken)
     {
-        var item = _context.Cars.AsNoTracking()
+        var item = await _context.Cars.AsNoTracking()
               .Where(c => c.Id == id)
               .Select(c => new CarDto
               {
@@ -51,17 +51,19 @@ public class CarRepository(CarCheckupDbContext carCheckupDbContext) : ICarReposi
                   ModelId = c.ModelId,
                   GenerationYear = c.GenerationYear.Year
 
-              }).FirstOrDefault();
+              }).FirstOrDefaultAsync(cancellationToken);
         return item;
 
     }
 
-    public int GetCarId(string plate)
+    public async Task< int> GetCarId(string plate,CancellationToken cancellationToken)
     {
         try
         {
-            return _context.Cars.AsNoTracking()
-                .First(c => c.Plate == plate).Id;
+            var car = await _context.Cars.AsNoTracking()
+            .FirstOrDefaultAsync(c => c.Plate == plate, cancellationToken);
+            return car is null ? 0 :car.Id;
+
         }
         catch
         {

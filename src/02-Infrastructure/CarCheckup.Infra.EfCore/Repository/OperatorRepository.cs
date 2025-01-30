@@ -7,9 +7,9 @@ namespace CarCheckup.Infra.EfCore.Repository;
 public class OperatorRepository(CarCheckupDbContext carCheckupDbContext) : IOperatorRepository
 {
     private readonly CarCheckupDbContext _context = carCheckupDbContext;
-    public bool Login(string username, string password)
+    public async Task<bool> Login(string username, string password, CancellationToken cancellationToken)
     {
-        return _context.Operators.AsNoTracking()
-             .Any(o => o.Username == username && o.Password == password);
+        return await _context.Operators.AsNoTracking()
+             .AnyAsync(o => o.Username == username && o.Password == password, cancellationToken);
     }
 }
