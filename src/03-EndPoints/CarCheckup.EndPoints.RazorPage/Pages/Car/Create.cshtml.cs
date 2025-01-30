@@ -12,7 +12,7 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.Car
         private readonly ICarAppService _carAppService = carAppService;
         private readonly ICarModelAppService _carModelAppService = carModelAppService;
         [BindProperty]
-        public Domain.Core.Dtos.Car.CreateCarDto Car { get; set; } = null!;//?
+        public Domain.Core.Dtos.Car.CarDto Car { get; set; } = null!;//?
         [BindProperty]
         public List<CarCheckup.Domain.Core.Entities.CarModel> Models { get; set; } = [];
         [BindProperty]

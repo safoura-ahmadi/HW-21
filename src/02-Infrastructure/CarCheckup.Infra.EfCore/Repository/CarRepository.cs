@@ -30,6 +30,24 @@ public class CarRepository(CarCheckupDbContext carCheckupDbContext) : ICarReposi
             }).FirstOrDefault();
     }
 
+    public CarDto? Get(int id)
+    {
+        var item = _context.Cars.AsNoTracking()
+              .Where(c => c.Id == id)
+              .Select(c => new CarDto
+              {
+
+                  Company = c.Company,
+                  OwnerMeliCode = c.OwnerMeliCode,
+                  OwnerMobile = c.OwnerMobile,
+                  Plate = c.Plate,
+                  ShamsiYear = c.GenerationYear.Year
+
+              }).FirstOrDefault();
+        return item;
+
+    }
+
     public int GetCarId(string plate)
     {
         try

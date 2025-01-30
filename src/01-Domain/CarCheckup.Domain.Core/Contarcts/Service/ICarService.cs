@@ -7,7 +7,7 @@ public interface ICarService
 {
     //Create
     int Create(Car car);
-
+    CarDto? Get(int id);
     int GetCarId(string plate);
     GetCarDto? GetById(int id);
    

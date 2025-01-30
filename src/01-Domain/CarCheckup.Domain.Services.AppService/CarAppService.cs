@@ -11,7 +11,7 @@ public class CarAppService(ICarService carService) : ICarAppService
 {
     private readonly ICarService _carService = carService;
 
-    public int Create(CreateCarDto car)
+    public int Create(CarDto car)
     {
         var pc = new PersianCalendar();
         var shamiDate = pc.ToDateTime(car.ShamsiYear, 1, 1, 0, 0, 0, 0);
@@ -30,8 +30,14 @@ public class CarAppService(ICarService carService) : ICarAppService
 
     }
 
+    public CarDto? Get(int id)
+    {
+        return _carService.Get(id);
+    }
+
     public int GetCarId(string plate)
     {
         return _carService.GetCarId(plate);
     }
+    
 }

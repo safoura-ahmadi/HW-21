@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CarCheckup.Domain.Core.Dtos.Car;
 
-public class CreateCarDto
+public class CarDto
 {
 
     [Required(ErrorMessage = "پلاک ماشین نمی‌تواند خالی باشد")]

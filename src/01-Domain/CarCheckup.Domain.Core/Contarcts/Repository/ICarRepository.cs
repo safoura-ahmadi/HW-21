@@ -9,6 +9,7 @@ public interface ICarRepository
     //Create
     int Create(Car car);
      GetCarDto? GetById(int id);
+    CarDto? Get(int id);
     int GetCarId(string plate);
 
 }
