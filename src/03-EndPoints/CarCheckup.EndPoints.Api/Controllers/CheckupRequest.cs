@@ -10,27 +10,41 @@ namespace CarCheckup.EndPoints.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CheckupRequest(ICarAppService carAppService, ICheckupRequestAppService checkupRequestAppService) : ControllerBase
+    public class CheckupRequest : ControllerBase
     {
-        [HttpPost("Create")]
-        public GetCheckupRequestDto? CreateWithCar([FromBody] CarDto car)
+        //[HttpPost(Name ="CreateRequestByCar")]
+        //public GetCheckupRequestDto? CreateWithCar([FromBody] CarDto car)
+        //{
+        //    var id = carAppService.GetCarId(car.Plate);
+        //    if (id == 0)
+        //    {
+        //        id = carAppService.Create(car);
+        //    }
+        //    checkupRequestAppService.Create(id);
+        //    return checkupRequestAppService.GetByCarId(id);
+        //}
+        private readonly ICheckupRequestAppService _checkupRequestAppService;
+        public CheckupRequest(ICheckupRequestAppService checkupRequestAppService)
         {
-            var id = carAppService.GetCarId(car.Plate);
-            if (id == 0)
-            {
-                id = carAppService.Create(car);
-            }
-            checkupRequestAppService.Create(id);
-            return checkupRequestAppService.GetByCarId(id);
+            _checkupRequestAppService = checkupRequestAppService;
+            _checkupRequestAppService.SetRequestsToIncompleted();
         }
-        public Result Create(int carId)
+        [HttpPost("create")]
+        public IActionResult Create(int carId)
         {
-            var result = checkupRequestAppService.Create(carId);
-            return result;
+            var result = _checkupRequestAppService.Create(carId);
+            if (result.IsSuccess)
+                return Ok(new { message = result.Message, checkupRequest = _checkupRequestAppService.GetByCarId(carId) });
+            return BadRequest(result.Message);
+
         }
-        public GetCheckupRequestDto? GetByCarId(int carId)
+        [HttpGet(("get"))]
+        public IActionResult GetByCarId(int carId)
         {
-            return checkupRequestAppService.GetByCarId(carId);
+            var item = _checkupRequestAppService.GetByCarId(carId);
+            if (item == null)
+                return NotFound();
+            return Ok(item);
         }
     }
 }

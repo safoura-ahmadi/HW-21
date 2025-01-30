@@ -14,5 +14,6 @@ public interface ICheckupRequestAppService
     List<GetCheckupRequestDto> GetByDate(DateOnly timeToDone);
     List<GetCheckupRequestDto> GettAll();
     GetCheckupRequestDto? GetByCarId(int id);
+    public string ConvertDateToPersion(DateOnly date);
     bool SetRequestsToIncompleted();
 }

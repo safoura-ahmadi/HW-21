@@ -11,6 +11,8 @@ public class CarModelAppService(ICarModelService carModelService) : ICarModelApp
 
     public Result Create(string name)
     {
+        if (string.IsNullOrEmpty(name))
+            return new Result(false, "نام مدل نمیتواند خالی باشد");
         var result = _carModelService.Create(name);
         if (result)
             return new Result(true, "مدل جدید با موفقیت اصافه شد");
@@ -22,7 +24,7 @@ public class CarModelAppService(ICarModelService carModelService) : ICarModelApp
        var result = _carModelService.Delete(id);
         if (result)
             return new Result(true, "مدل با موفقیت حذف گردید");
-        return new Result(false, "DataBase Error Raised");
+        return new Result(false, "مدلی با این ایدی در دیتابیس وجود ندارد");
     }
 
     public List<CarModel> GetAll()
@@ -44,8 +46,10 @@ public class CarModelAppService(ICarModelService carModelService) : ICarModelApp
 
     public Result UpdateName(int id, string name)
     {
+        if (string.IsNullOrEmpty(name))
+            return new Result(false, "نام مدل نمیتواند خال باشد");
         var result = _carModelService.UpdateName(id, name);
         if (result) return new Result(true, "نام مدل با موفقیت ویرایش شد");
-        return new Result(false, "DataBase Error Raised");
+        return new Result(false, "مدلی با این ایدی در دیتابیس وجود ندارد");
     }
 }

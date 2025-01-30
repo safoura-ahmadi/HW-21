@@ -25,7 +25,7 @@ public class CarService(ICarRepository carRepository) : ICarService
 
     public CarDto? Get(int id)
     {
-        throw new NotImplementedException();
+        return _carRepository.Get(id);
     }
 
     public int GetCarId(string plate)

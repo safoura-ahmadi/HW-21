@@ -14,9 +14,16 @@ public class CarRepository(CarCheckupDbContext carCheckupDbContext) : ICarReposi
 
     public int Create(Car car)
     {
-        _context.Cars.Add(car);
-        _context.SaveChanges();
+        try
+        {
+            _context.Cars.Add(car);
+            _context.SaveChanges();
+        }
+        catch { }
+
+
         return car.Id;
+
     }
 
     public GetCarDto? GetById(int id)
@@ -41,7 +48,8 @@ public class CarRepository(CarCheckupDbContext carCheckupDbContext) : ICarReposi
                   OwnerMeliCode = c.OwnerMeliCode,
                   OwnerMobile = c.OwnerMobile,
                   Plate = c.Plate,
-                  ShamsiYear = c.GenerationYear.Year
+                  ModelId = c.ModelId,
+                  GenerationYear = c.GenerationYear.Year
 
               }).FirstOrDefault();
         return item;

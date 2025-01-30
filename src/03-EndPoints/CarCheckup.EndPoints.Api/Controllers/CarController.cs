@@ -10,14 +10,34 @@ namespace CarCheckup.EndPoints.Api.Controllers
     [ApiController]
     public class CarController(ICarAppService carAppService) : ControllerBase
     {
-        public int Create(CarDto car)
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CarDto car)
         {
-            return carAppService.Create(car);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (car is null)
+            {
+                return BadRequest("Car Data is Required");
+            }
+
+            var carId = carAppService.GetCarId(car.Plate);
+            if (carId == 0)
+            {
+                carId = carAppService.Create(car);
+                if (carId == 0)
+                    return BadRequest("you Entered Invalid ModelId");
+            }
+            return CreatedAtAction(nameof(Get), new { id = carId }, carId);
         }
-        public CarDto? Get(int id)
+        [HttpGet("get")]
+        public IActionResult Get(int id)
         {
-            var item = carAppService.Get(id);
-            return item;
+            var car = carAppService.Get(id);
+            if (car is null)
+                return NotFound();
+            return Ok(car);
         }
     }
 }

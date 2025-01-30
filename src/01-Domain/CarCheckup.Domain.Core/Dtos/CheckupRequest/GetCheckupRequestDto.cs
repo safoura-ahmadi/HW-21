@@ -11,6 +11,7 @@ public class GetCheckupRequestDto
     public string ModelName { get; set; } = null!;
     public CarCompanyEnum Company { get; set; }
     public DateOnly TimeToDone { get; set; }
+    public string? PersionTimeToDone { get; set; }
     public CheckUpRequestStatusEnum Status { get; set; }
 
 }

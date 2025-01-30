@@ -14,7 +14,7 @@ public class CarAppService(ICarService carService) : ICarAppService
     public int Create(CarDto car)
     {
         var pc = new PersianCalendar();
-        var shamiDate = pc.ToDateTime(car.ShamsiYear, 1, 1, 0, 0, 0, 0);
+        var shamiDate = pc.ToDateTime(car.GenerationYear, 1, 1, 0, 0, 0, 0);
         var miladiDate = shamiDate.ToUniversalTime();
          
         var item = new Car()

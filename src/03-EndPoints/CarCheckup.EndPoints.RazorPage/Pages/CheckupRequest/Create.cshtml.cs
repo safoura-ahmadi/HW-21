@@ -14,8 +14,7 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
 
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
-        [BindProperty]
-        public string TimeToDone { get; set; } = null!;
+
         public IActionResult OnGet()
         {
 
@@ -26,21 +25,7 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
                 var checkupRequest = _checkupRequestAppService.GetByCarId(Id);
                 if (checkupRequest != null)
                 {
-                    PersianCalendar pc = new PersianCalendar();
-
-                    // استخراج سال، ماه و روز شمسی
-                    var miladiDate = checkupRequest.TimeToDone.ToDateTime(TimeOnly.MinValue);
-                    int shamsiYear = pc.GetYear(miladiDate);
-                    int shamsiMonth = pc.GetMonth(miladiDate);
-                    int shamsiDay = pc.GetDayOfMonth(miladiDate);
-
-                    TimeToDone = $"{shamsiYear}/{shamsiMonth}/{shamsiDay} - {Calendar.DaysOfWeek.GetNameOfDay(checkupRequest.TimeToDone)}";
-                   
-
-
                     CheckupRequest = checkupRequest;
-
-
                     return Page();
                 }
                 else

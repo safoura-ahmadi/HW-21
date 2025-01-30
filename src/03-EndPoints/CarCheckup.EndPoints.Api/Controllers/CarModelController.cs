@@ -8,53 +8,53 @@ namespace CarCheckup.EndPoints.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class CarModelController(ICarModelAppService carModelAppService,SiteSettings siteSettings) : ControllerBase
+public class CarModelController(ICarModelAppService carModelAppService) : ControllerBase
 {
-    [HttpPost("Create")]
-    public string? Create(string name, [FromHeader] string apikey)
+    [HttpPost("create")]
+    public IActionResult Create(string name, [FromHeader] string apikey)
     {
-        if (apikey == siteSettings.ApiKey)
+        if (!string.IsNullOrEmpty(name))
         {
-            return carModelAppService.Create(name).Message;
+            var result = carModelAppService.Create(name).Message;
+            return Ok(result);
         }
-        return "api key not found";
-    }
-    [HttpGet("GetAll")]
-    public List<CarModel> GetAll([FromHeader]string apiKey)
-    {
-        if (apiKey == siteSettings.ApiKey)
-        {
-            return carModelAppService.GetAll();
-        }
-        return [];
-    }
-    [HttpGet("Get")]
-    public CarModel? Get(int id, [FromHeader] string apiKey)
-    {
-        if (apiKey == siteSettings.ApiKey)
-        {
+        return BadRequest("Model Name Can Not be Empty or Null");
 
-            return carModelAppService.GetById(id);
-        }
-        return null;
     }
-    [HttpPatch("Update")]
-    public bool Update([FromQuery] int id, [FromQuery] string name, [FromHeader] string apiKey)
+    [HttpGet("get-all")]
+    public IActionResult GetAll([FromHeader] string apiKey)
     {
-        if (apiKey == siteSettings.ApiKey)
-        {
-            return carModelAppService.UpdateName(id, name).IsSuccess;
-        }
-        return false;
+        var item = carModelAppService.GetAll();
+        if (item.Count == 0 || item == null)
+            return NoContent();
+        return Ok(item);
     }
-    [HttpDelete("Delete")]
-    public bool Delete([FromQuery] int id, [FromHeader] string apiKey)
+    [HttpGet("get-byId")]
+    public IActionResult Get(int id, [FromHeader] string apiKey)
     {
-        if (apiKey == siteSettings.ApiKey)
-        {
-            return carModelAppService.Delete(id).IsSuccess;
-        }
-        return false;
+        var model = carModelAppService.GetById(id);
+        if (model is null)
+            return NotFound();
+        return Ok(model);
     }
-  
+    [HttpPatch("update")]
+    public IActionResult Update(int id, string name, [FromHeader] string apiKey)
+    {
+
+        var result = carModelAppService.UpdateName(id, name);
+        if (result.IsSuccess)
+            return Ok(result.Message);
+        else
+            return BadRequest(result.Message);
+    }
+    [HttpDelete("delete")]
+    public IActionResult Delete([FromQuery] int id, [FromHeader] string apiKey)
+    {
+        var result = carModelAppService.Delete(id);
+        if (result.IsSuccess)
+            return Ok(result.Message);
+        return BadRequest(result.Message);
+
+    }
+
 }

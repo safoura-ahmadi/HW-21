@@ -24,7 +24,7 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
         if (carId < 0)
             return new Result(false, "خودرویی با این مشخصات وجود ندارد");
         var car = _carService.GetById(carId);
-        if(car == null)
+        if (car == null)
             return new Result(false, "خودرویی با این مشخصات وجود ندارد");
         var date = _checkupRequestService.GetLastCheckupDateByCar(carId).Year;
         if (date == DateTime.Now.Year)
@@ -35,7 +35,7 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
             return new Result(false, "سال ساخت ماشین یافت نشد");
         if (generationDate.AddYears(5) <= DateOnly.FromDateTime(DateTime.Now))
         {
-            _rejectedCheckupRequestService.Create(carId); 
+            _rejectedCheckupRequestService.Create(carId);
             return new Result(false, "ثبت معاینه فنی برای خودرو هایی با سال ساخت بیش از 5 سال مجاز نیست");
 
         }
@@ -72,12 +72,12 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
         // بررسی زوج یا فرد بودن روز
         bool isCurrentDayEven = DaysOfWeek.GetDayType(currentDate) == "Even";
 
-        if ((isEvenDayRequired && !isCurrentDayEven))
+        if (isEvenDayRequired && !isCurrentDayEven || (date < DateOnly.FromDateTime(DateTime.Now)))
         {
 
             date = DaysOfWeek.FindNextEvenDay(date);
         }
-        else if (isOddDayRequired && (isCurrentDayEven || date.DayOfWeek == DayOfWeek.Friday))
+        else if (isOddDayRequired && (isCurrentDayEven || date.DayOfWeek == DayOfWeek.Friday || date < DateOnly.FromDateTime(DateTime.Now)))
         {
             date = DaysOfWeek.FindNextOddDay(date);
         }
@@ -120,15 +120,36 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
 
     public GetCheckupRequestDto? GetByCarId(int id)
     {
-        return _checkupRequestService.GetByCarId(id);
-    }
+        if (id <= 0)
+            return null;
+        var checkupRequest = _checkupRequestService.GetByCarId(id);
+        if (checkupRequest != null)
+        {
 
+            var timeToDone = checkupRequest.TimeToDone;
+            var pertionTimeToDone = ConvertDateToPersion(timeToDone);
+            checkupRequest.PersionTimeToDone = pertionTimeToDone;
+
+        }
+        return checkupRequest;
+    }
+    public string ConvertDateToPersion(DateOnly date)
+    {
+        PersianCalendar pc = new();
+
+        var miladiDate = date.ToDateTime(TimeOnly.MinValue);
+        int shamsiYear = pc.GetYear(miladiDate);
+        int shamsiMonth = pc.GetMonth(miladiDate);
+        int shamsiDay = pc.GetDayOfMonth(miladiDate);
+        var result = $"{shamsiYear}/{shamsiMonth}/{shamsiDay} - {Calendar.DaysOfWeek.GetNameOfDay(date)}";
+        return result;
+    }
     public Result MarkAsAccepted(int id)
     {
         if (id <= 0)
             return new Result(false, "ایتم انتخاب شده نامعتبر است");
         if (!_checkupRequestService.MarkAsAccepted(id))
-            return new Result(false, "DataBase Error Raised");
+            return new Result(false, "این ایدی در دیتا بیس موجود نیست");
         return new Result(true, "وضعیت درخواست معاینه فنی به حالت تایید شده تغییر یافت");
 
     }
@@ -138,7 +159,7 @@ public class CheckupRequestAppService(ICheckupRequestService checkupRequestServi
         if (id <= 0)
             return new Result(false, "ایتم انتخاب شده نامعتبر است");
         if (!_checkupRequestService.MarkAsRejected(id))
-            return new Result(false, "DataBase Error Raised");
+            return new Result(false, "این ایدی در دیتا بیس موجود نیست");
         return new Result(true, "وضعیت درخواست معاینه فنی به حالت رد شده تغییر یافت");
     }
 

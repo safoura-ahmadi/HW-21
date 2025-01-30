@@ -18,7 +18,7 @@ public class CarDto
 
     [Required(ErrorMessage = "سال تولید خودرو نمی‌تواند خالی باشد.")]
     [Range(1340, 1403, ErrorMessage = "سال شمسی باید بین 1340 تا 1403 باشد.")]
-    public int ShamsiYear { get; set; }
+    public int GenerationYear { get; set; }
 
     [Required(ErrorMessage = "کد ملی نمی‌تواند خالی باشد")]
     [RegularExpression(@"^\d{10}$", ErrorMessage = "کد ملی باید دقیقا 10 رقم باشد")]
