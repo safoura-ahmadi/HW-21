@@ -1,14 +1,18 @@
 ﻿using CarCheckup.Domain.Core.Contarcts.AppService;
 using CarCheckup.Domain.Core.Contarcts.Service;
+using CarCheckup.Domain.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace CarCheckup.Domain.Services.AppService;
 
-public class OperatorAppService(IOperatorService operatorService) : IOperatorAppService
+public class OperatorAppService( UserManager<Operator> userManager, SignInManager<Operator> signInManager) : IOperatorAppService
 {
-    private readonly IOperatorService _operatorService = operatorService;
+    
 
-    public async Task< bool> Login(string username, string password,CancellationToken cancellationToken)
+    public async Task<IdentityResult> Login(string username, string password,CancellationToken cancellationToken)
     {
-        return await _operatorService.Login(username, password, cancellationToken);
+        var result = await signInManager.PasswordSignInAsync(username, password, true, false);
+        return result.Succeeded ? IdentityResult.Success : IdentityResult.Failed();
+      
     }
 }

@@ -22,8 +22,8 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.Operator
         }
         public async Task< IActionResult> OnPost(CancellationToken cancellationToken)
         {
-            bool isLogin = await _operatoAppService.Login(UserName, Password,cancellationToken);
-            if (isLogin)
+            var isLogin = await _operatoAppService.Login(UserName, Password,cancellationToken);
+            if (isLogin.Succeeded)
             {
                 HttpContext.Session.SetString("isLogin", "True");
                 return RedirectToPage("Menue");

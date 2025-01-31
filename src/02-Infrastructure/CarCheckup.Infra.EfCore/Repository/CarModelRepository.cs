@@ -2,7 +2,7 @@
 using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Infra.EfCore.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
+
 
 namespace CarCheckup.Infra.EfCore.Repository;
 
@@ -32,7 +32,7 @@ public class CarModelRepository(CarCheckupDbContext carCheckupDbContext) : ICarM
         {
             var item = await _context.CarModels.FirstAsync(cm => cm.Id == id, cancellationToken);
             _context.CarModels.Remove(item);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
         catch
