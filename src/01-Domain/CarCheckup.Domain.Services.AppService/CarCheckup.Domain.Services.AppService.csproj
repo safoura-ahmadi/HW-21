@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\00-Frameworks\Calendar\Calendar.csproj" />
+    <ProjectReference Include="..\..\00-Frameworks\Calendar\framework.csproj" />
     <ProjectReference Include="..\CarCheckup.Domain.Services.Service\CarCheckup.Domain.Services.Service.csproj" />
   </ItemGroup>
 

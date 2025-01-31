@@ -7,6 +7,7 @@ using CarCheckup.Domain.Services.AppService;
 using CarCheckup.Domain.Services.Service;
 using CarCheckup.Infra.EfCore.Common;
 using CarCheckup.Infra.EfCore.Repository;
+using framework;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -44,10 +45,9 @@ builder.Services.AddIdentity<Operator, IdentityRole<int>>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
-    options.User.RequireUniqueEmail = false;
-
-
-}).AddEntityFrameworkStores<CarCheckupDbContext>();
+})
+     .AddErrorDescriber<PersianIdentityErrorDescriber>()
+    .AddEntityFrameworkStores<CarCheckupDbContext>();
 
 
 builder.Services.AddScoped<ICheckupRequestAppService, CheckupRequestAppService>();

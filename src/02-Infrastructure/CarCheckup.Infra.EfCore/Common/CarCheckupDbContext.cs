@@ -16,10 +16,11 @@ public class CarCheckupDbContext : IdentityDbContext<Operator, IdentityRole<int>
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder.ApplyConfiguration(new CarConfiguration());
-        //modelBuilder.ApplyConfiguration(new CarModelConfiguration());
-        //modelBuilder.ApplyConfiguration(new CheckupRequestConfiguration());
-        //modelBuilder.ApplyConfiguration(new RejectedCheckupRequestConfiguration());
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfiguration(new CarConfiguration());
+        modelBuilder.ApplyConfiguration(new CarModelConfiguration());
+        modelBuilder.ApplyConfiguration(new CheckupRequestConfiguration());
+        modelBuilder.ApplyConfiguration(new RejectedCheckupRequestConfiguration());
     }
     public DbSet<Car> Cars { get; set; }
     public DbSet<CheckupRequest> CheckupRequests { get; set; }

@@ -26,7 +26,7 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.Operator
             if (isLogin.Succeeded)
             {
                 HttpContext.Session.SetString("isLogin", "True");
-                return RedirectToPage("Menue");
+                return RedirectToPage("Menu");
             }
             TempData["ErrorMessage"] = "نام کاربری یا رمز عبور اشتباه است";
             return Page();

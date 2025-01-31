@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarCheckup.Domain.Services.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00-Frameworks", "00-Frameworks", "{A29E08D1-B7E9-45D5-B2E6-BD2669DB0782}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calendar", "src\00-Frameworks\Calendar\Calendar.csproj", "{0FD14D1A-0A00-4017-9174-E2A7B7E6A7B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "framework", "src\00-Frameworks\Calendar\framework.csproj", "{0FD14D1A-0A00-4017-9174-E2A7B7E6A7B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarCheckup.EndPoints.Api", "src\03-EndPoints\CarCheckup.EndPoints.Api\CarCheckup.EndPoints.Api.csproj", "{30DB1058-8B7B-4E38-A0AE-646077B44A69}"
 EndProject
