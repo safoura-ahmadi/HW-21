@@ -18,34 +18,36 @@ public class ApiKeyMiddleware(RequestDelegate next, SiteSettings settings)
         //    return;
         //}
 
-       
-        if (path.Contains("CarModel", StringComparison.CurrentCultureIgnoreCase))
+        if (path.StartsWith("/api", StringComparison.OrdinalIgnoreCase))
         {
-          
-            if (path.StartsWith("/api", StringComparison.OrdinalIgnoreCase))
+            if (path.Contains("CarModel", StringComparison.CurrentCultureIgnoreCase))
             {
-              
+
+
+
+
                 if (context.Request.Headers.TryGetValue("ApiKey", out var apiKey) && !string.IsNullOrEmpty(apiKey))
                 {
-               
+
                     if (apiKey == settings.ApiKey)
                     {
                         await next(context);
                         return;
                     }
 
-              
-                    await context.Response.WriteAsync("Access Denied: Invalid ApiKey");
+                    context.Response.StatusCode = 403;
+                    await context.Response.WriteAsync("Access Denied: Invalid ApiKey", default);
                     return;
                 }
 
-             
-                await context.Response.WriteAsync("Access Denied: ApiKey is required");
+                context.Response.StatusCode = 401;
+                await context.Response.WriteAsync("Access Denied: ApiKey is required", default);
                 return;
+
             }
         }
         await next(context);
-    
+
 
     }
 

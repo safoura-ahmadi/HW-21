@@ -50,5 +50,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.UseApiKeyValidation();
+
 app.Run();
