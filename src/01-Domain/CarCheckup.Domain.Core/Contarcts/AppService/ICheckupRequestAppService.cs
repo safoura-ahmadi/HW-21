@@ -6,14 +6,14 @@ namespace CarCheckup.Domain.Core.Contarcts.AppService;
 
 public interface ICheckupRequestAppService
 {
-    Result Create(int carId);
-    DateOnly DetermineTimetoDone(CarCompanyEnum carCompany);
-    Result MarkAsAccepted(int id);
-    Result MarkAsRejected(int id);
-    List<GetCheckupRequestDto> GeByCarModel(int modelId);
-    List<GetCheckupRequestDto> GetByDate(DateOnly timeToDone);
-    List<GetCheckupRequestDto> GettAll();
-    GetCheckupRequestDto? GetByCarId(int id);
+    Task<Result> Create(int carId, CancellationToken cancellationToken);
+   Task< DateOnly> DetermineTimetoDone(CarCompanyEnum carCompany,CancellationToken cancellationToken);
+    Task<Result> MarkAsAccepted(int id, CancellationToken cancellationToken);
+    Task<Result> MarkAsRejected(int id, CancellationToken cancellationToken);
+    Task<List<GetCheckupRequestDto>> GeByCarModel(int modelId, CancellationToken cancellationToken);
+    Task<List<GetCheckupRequestDto>> GetByDate(DateOnly timeToDone, CancellationToken cancellationToken);
+    Task<List<GetCheckupRequestDto>> GettAll(CancellationToken cancellationToken);
+    Task<GetCheckupRequestDto?> GetByCarId(int id, CancellationToken cancellationToken);
     public string ConvertDateToPersion(DateOnly date);
-    bool SetRequestsToIncompleted();
+    Task<bool> SetRequestsToIncompleted(CancellationToken cancellationToken);
 }

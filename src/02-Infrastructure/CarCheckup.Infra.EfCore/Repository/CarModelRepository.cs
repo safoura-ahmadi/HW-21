@@ -2,6 +2,7 @@
 using CarCheckup.Domain.Core.Entities;
 using CarCheckup.Infra.EfCore.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace CarCheckup.Infra.EfCore.Repository;
 
@@ -9,13 +10,13 @@ public class CarModelRepository(CarCheckupDbContext carCheckupDbContext) : ICarM
 {
     private readonly CarCheckupDbContext _context = carCheckupDbContext;
 
-    public bool Create(string name)
+    public async Task<bool> Create(string name, CancellationToken cancellationToken)
     {
         try
         {
             var item = new CarModel() { Name = name };
-            _context.CarModels.Add(item);
-            _context.SaveChanges();
+            await _context.CarModels.AddAsync(item, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
 
         }
@@ -25,11 +26,11 @@ public class CarModelRepository(CarCheckupDbContext carCheckupDbContext) : ICarM
         }
     }
 
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id, CancellationToken cancellationToken)
     {
         try
         {
-            var item = _context.CarModels.First(cm => cm.Id == id);
+            var item = await _context.CarModels.FirstAsync(cm => cm.Id == id, cancellationToken);
             _context.CarModels.Remove(item);
             _context.SaveChanges();
             return true;
@@ -40,24 +41,24 @@ public class CarModelRepository(CarCheckupDbContext carCheckupDbContext) : ICarM
         }
     }
 
-    public List<CarModel> GetAll()
+    public async Task<List<CarModel>> GetAll(CancellationToken cancellationToken)
     {
-        return [.. _context.CarModels.AsNoTracking()];
+        return await _context.CarModels.AsNoTracking().ToListAsync(cancellationToken);
     }
 
-    public CarModel GetById(int id)
+    public async Task<CarModel> GetById(int id, CancellationToken cancellationToken)
     {
-        return _context.CarModels.AsNoTracking()
-            .First(x => x.Id == id);
+        return await _context.CarModels.AsNoTracking()
+            .FirstAsync(x => x.Id == id, cancellationToken);
     }
 
-    public bool UpdateName(int id, string name)
+    public async Task<bool> UpdateName(int id, string name, CancellationToken cancellationToken)
     {
         try
         {
-            var item = _context.CarModels.First(cm => cm.Id == id);
+            var item = await _context.CarModels.FirstAsync(cm => cm.Id == id, cancellationToken);
             item.Name = name;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
         catch

@@ -7,11 +7,11 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
     public class MarkAsAcceptedModel(ICheckupRequestAppService checkupRequestAppService) : PageModel
     {
         private readonly ICheckupRequestAppService _checkupRequestAppService = checkupRequestAppService;
-        public IActionResult OnGet(int id)
+        public async Task< IActionResult> OnGet(int id,CancellationToken cancellationToken )
         {
             if (HttpContext.Session.GetString("isLogin") == "True")
             {
-                var result = _checkupRequestAppService.MarkAsAccepted(id);
+                var result =await _checkupRequestAppService.MarkAsAccepted(id,cancellationToken);
                 if (result.IsSuccess)
                 {
                     TempData["SuccessMessage"] = result.Message;

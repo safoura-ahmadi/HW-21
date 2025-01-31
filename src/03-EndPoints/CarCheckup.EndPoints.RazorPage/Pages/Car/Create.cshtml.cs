@@ -17,40 +17,40 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.Car
         public List<CarCheckup.Domain.Core.Entities.CarModel> Models { get; set; } = [];
         [BindProperty]
         public List<CarCompanyEnum> Companies { get; set; } = [];
-        public void OnGet()
+        public async Task OnGet(CancellationToken cancellationToken)
         {
             Companies = Enum.GetValues<CarCompanyEnum>().Cast<CarCompanyEnum>().ToList();
-            Models = _carModelAppService.GetAll();
+            Models = await _carModelAppService.GetAll(cancellationToken);
 
         }
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost(CancellationToken cancellationToken)
         {
 
-            LoadPageData();
+           await LoadPageData(cancellationToken);
             if (!ModelState.IsValid)
             {
                 return Page();
             }
             else
             {
-                var id = _carAppService.GetCarId(Car.Plate);
+                var id = await _carAppService.GetCarId(Car.Plate, cancellationToken);
                 if (id != 0)
                 {
                     return RedirectToPage("/CheckupRequest/Create", new { id });
 
                 }
 
-                id = _carAppService.Create(Car);
+                id = await _carAppService.Create(Car, cancellationToken);
                 return RedirectToPage("/CheckupRequest/Create", new { id });
 
 
             }
 
         }
-        private void LoadPageData()
+        private async Task LoadPageData(CancellationToken cancellationToken)
         {
             Companies = Enum.GetValues<CarCompanyEnum>().Cast<CarCompanyEnum>().ToList();
-            Models = _carModelAppService.GetAll();
+            Models = await _carModelAppService.GetAll(cancellationToken);
         }
     }
 }

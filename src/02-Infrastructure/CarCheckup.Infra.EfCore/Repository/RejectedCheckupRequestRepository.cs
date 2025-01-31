@@ -7,11 +7,11 @@ namespace CarCheckup.Infra.EfCore.Repository;
 public class RejectedCheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) : IRejectedCheckupRequestRepository
 {
     private readonly CarCheckupDbContext _context = carCheckupDbContext;
-    public void Create(int carId)
+    public async Task Create(int carId, CancellationToken cancellationToken)
     {
         var item = new RejectedCheckupRequest()
         { CarId = carId };
-        _context.Add(item);
-        _context.SaveChanges();
+        await _context.AddAsync(item, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

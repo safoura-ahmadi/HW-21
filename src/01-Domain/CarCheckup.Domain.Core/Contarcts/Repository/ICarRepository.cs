@@ -7,9 +7,9 @@ namespace CarCheckup.Domain.Core.Contarcts.Repository;
 public interface ICarRepository
 {
     //Create
-    int Create(Car car);
-     GetCarDto? GetById(int id);
-    CarDto? Get(int id);
-    int GetCarId(string plate);
+    Task<int> Create(Car car, CancellationToken cancellationToken);
+    Task<GetCarDto?> GetById(int id, CancellationToken cancellationToken);
+    Task<CarDto?> Get(int id, CancellationToken cancellationToken);
+    Task<int> GetCarId(string plate, CancellationToken cancellationToken);
 
 }

@@ -11,46 +11,46 @@ namespace CarCheckup.EndPoints.Api.Controllers;
 public class CarModelController(ICarModelAppService carModelAppService) : ControllerBase
 {
     [HttpPost("create")]
-    public IActionResult Create(string name, [FromHeader] string apikey)
+    public async Task< IActionResult> Create(string name, [FromHeader] string apikey,CancellationToken cancellationToken)
     {
         if (!string.IsNullOrEmpty(name))
         {
-            var result = carModelAppService.Create(name).Message;
-            return Ok(result);
+            var result = await carModelAppService.Create(name, cancellationToken);
+            return Ok(result.Message);
         }
         return BadRequest("Model Name Can Not be Empty or Null");
 
     }
     [HttpGet("get-all")]
-    public IActionResult GetAll([FromHeader] string apiKey)
+    public async Task< IActionResult> GetAll([FromHeader] string apiKey,CancellationToken cancellationToken)
     {
-        var item = carModelAppService.GetAll();
+        var item =  await carModelAppService.GetAll(cancellationToken);
         if (item.Count == 0 || item == null)
             return NoContent();
         return Ok(item);
     }
     [HttpGet("get-byId")]
-    public IActionResult Get(int id, [FromHeader] string apiKey)
+    public async Task< IActionResult> Get(int id, [FromHeader] string apiKey,CancellationToken cancellationToken)
     {
-        var model = carModelAppService.GetById(id);
+        var model = await carModelAppService.GetById(id,cancellationToken);
         if (model is null)
             return NotFound();
         return Ok(model);
     }
     [HttpPatch("update")]
-    public IActionResult Update(int id, string name, [FromHeader] string apiKey)
+    public async Task< IActionResult> Update(int id, string name, [FromHeader] string apiKey,CancellationToken cancellationToken)
     {
 
-        var result = carModelAppService.UpdateName(id, name);
+        var result  = await carModelAppService.UpdateName(id, name,cancellationToken);
         if (result.IsSuccess)
             return Ok(result.Message);
         else
             return BadRequest(result.Message);
     }
     [HttpDelete("delete")]
-    public IActionResult Delete([FromQuery] int id, [FromHeader] string apiKey)
+    public async Task< IActionResult> Delete([FromQuery] int id, [FromHeader] string apiKey,CancellationToken cancellationToken)
     {
-        var result = carModelAppService.Delete(id);
+        var result = await carModelAppService.Delete(id,cancellationToken);
         if (result.IsSuccess)
             return Ok(result.Message);
         return BadRequest(result.Message);

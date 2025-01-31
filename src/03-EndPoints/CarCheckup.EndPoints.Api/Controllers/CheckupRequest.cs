@@ -24,24 +24,24 @@ namespace CarCheckup.EndPoints.Api.Controllers
         //    return checkupRequestAppService.GetByCarId(id);
         //}
         private readonly ICheckupRequestAppService _checkupRequestAppService;
-        public CheckupRequest(ICheckupRequestAppService checkupRequestAppService)
+        public  CheckupRequest(ICheckupRequestAppService checkupRequestAppService)
         {
             _checkupRequestAppService = checkupRequestAppService;
-            _checkupRequestAppService.SetRequestsToIncompleted();
+            //_checkupRequestAppService.SetRequestsToIncompleted();
         }
         [HttpPost("create")]
-        public IActionResult Create(int carId)
+        public async Task< IActionResult> Create(int carId,CancellationToken cancellationToken)
         {
-            var result = _checkupRequestAppService.Create(carId);
+            var result = await _checkupRequestAppService.Create(carId, cancellationToken);
             if (result.IsSuccess)
-                return Ok(new { message = result.Message, checkupRequest = _checkupRequestAppService.GetByCarId(carId) });
+                return Ok(new { message = result.Message, checkupRequest =await _checkupRequestAppService.GetByCarId(carId, cancellationToken) });
             return BadRequest(result.Message);
 
         }
         [HttpGet(("get"))]
-        public IActionResult GetByCarId(int carId)
+        public async Task< IActionResult> GetByCarId(int carId,CancellationToken cancellationToken)
         {
-            var item = _checkupRequestAppService.GetByCarId(carId);
+            var item = _checkupRequestAppService.GetByCarId(carId,cancellationToken);
             if (item == null)
                 return NotFound();
             return Ok(item);

@@ -2,5 +2,5 @@
 
 public interface IRejectedCheckupRequestRepository
 {
-    void Create(int carId);
+    Task Create(int carId, CancellationToken cancellationToken);
 }

@@ -9,34 +9,34 @@ public class CarModelAppService(ICarModelService carModelService) : ICarModelApp
 {
     private readonly ICarModelService _carModelService = carModelService;
 
-    public Result Create(string name)
+    public async Task< Result> Create(string name,CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(name))
             return new Result(false, "نام مدل نمیتواند خالی باشد");
-        var result = _carModelService.Create(name);
+        var result = await _carModelService.Create(name, cancellationToken);
         if (result)
             return new Result(true, "مدل جدید با موفقیت اصافه شد");
         return new Result(false, "DataBase Error Raised");
     }
 
-    public Result Delete(int id)
+    public async Task< Result> Delete(int id, CancellationToken cancellationToken)
     {
-       var result = _carModelService.Delete(id);
+       var result = await _carModelService.Delete(id, cancellationToken);
         if (result)
             return new Result(true, "مدل با موفقیت حذف گردید");
         return new Result(false, "مدلی با این ایدی در دیتابیس وجود ندارد");
     }
 
-    public List<CarModel> GetAll()
+    public async Task< List<CarModel>> GetAll(CancellationToken cancellationToken)
     {
-        return _carModelService.GetAll();
+        return await _carModelService.GetAll(cancellationToken);
     }
 
-    public CarModel? GetById(int id)
+    public async Task< CarModel?> GetById(int id, CancellationToken cancellationToken)
     {
         try
         {
-            return _carModelService.GetById(id);
+            return await _carModelService.GetById(id, cancellationToken);
         }
         catch
         {
@@ -44,11 +44,11 @@ public class CarModelAppService(ICarModelService carModelService) : ICarModelApp
         }
     }
 
-    public Result UpdateName(int id, string name)
+    public async Task< Result> UpdateName(int id, string name,CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(name))
             return new Result(false, "نام مدل نمیتواند خال باشد");
-        var result = _carModelService.UpdateName(id, name);
+        var result = await _carModelService.UpdateName(id, name,cancellationToken);
         if (result) return new Result(true, "نام مدل با موفقیت ویرایش شد");
         return new Result(false, "مدلی با این ایدی در دیتابیس وجود ندارد");
     }

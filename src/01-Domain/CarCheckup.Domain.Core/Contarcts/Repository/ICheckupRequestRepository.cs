@@ -7,20 +7,20 @@ namespace CarCheckup.Domain.Core.Contarcts.Repository;
 public interface ICheckupRequestRepository
 {
     //Create
-    bool Create(CheckupRequest checkupRequest);
+    Task<bool> Create(CheckupRequest checkupRequest, CancellationToken cancellationToken);
 
     //Read
-    List<GetCheckupRequestDto> GeByCarModel(int modelId);
-    List<GetCheckupRequestDto> GetByDate(DateOnly timeToDone);
-    List<GetCheckupRequestDto> GettAll();
-    GetCheckupRequestDto? GetByCarId(int id);
-    int GetDailyCount(DateOnly date);
+    Task<List<GetCheckupRequestDto>> GeByCarModel(int modelId, CancellationToken cancellationToken);
+    Task<List<GetCheckupRequestDto>> GetByDate(DateOnly timeToDone, CancellationToken cancellationToken);
+    Task<List<GetCheckupRequestDto>> GettAll(CancellationToken cancellationToken);
+    Task<GetCheckupRequestDto?> GetByCarId(int id, CancellationToken cancellationToken);
+    Task<int> GetDailyCount(DateOnly date, CancellationToken cancellationToken);
 
     //Update
-    bool MarkAsAccepted(int id);
-    bool MarkAsRejected(int id);
-    DateOnly? GetLastCheckupDate(CarCompanyEnum carCompany);
-    public DateOnly GetLastCheckupDateByCar(int carId);
-    bool SetRequestsToIncompleted();
+    Task<bool> MarkAsAccepted(int id, CancellationToken cancellationToken);
+    Task<bool> MarkAsRejected(int id, CancellationToken cancellationToken);
+    Task<DateOnly?> GetLastCheckupDate(CarCompanyEnum carCompany, CancellationToken cancellationToken);
+    Task<DateOnly> GetLastCheckupDateByCar(int carId, CancellationToken cancellationToken);
+    Task<bool> SetRequestsToIncompleted(CancellationToken cancellationToken);
 
 }

@@ -18,11 +18,11 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.CarModel
             }
             return RedirectToPage("/Operator/Index");
         }
-        public IActionResult OnPost()
+        public async Task< IActionResult> OnPost(CancellationToken cancellationToken)
         {
             if (HttpContext.Session.GetString("isLogin") == "True")
             {
-                var result = _carModelAppService.Create(Name);
+                var result = await _carModelAppService.Create(Name,cancellationToken);
                 if (result.IsSuccess)
                 {
                     TempData["SuccessMessage"] = result.Message;

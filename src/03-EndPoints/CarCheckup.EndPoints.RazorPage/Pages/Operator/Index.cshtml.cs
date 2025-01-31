@@ -20,9 +20,9 @@ namespace CarCheckup.EndPoints.RazorPage.Pages.Operator
                 HttpContext.Session.Remove("isLogin");
             }
         }
-        public IActionResult OnPost()
+        public async Task< IActionResult> OnPost(CancellationToken cancellationToken)
         {
-            bool isLogin = _operatoAppService.Login(UserName, Password);
+            bool isLogin = await _operatoAppService.Login(UserName, Password,cancellationToken);
             if (isLogin)
             {
                 HttpContext.Session.SetString("isLogin", "True");

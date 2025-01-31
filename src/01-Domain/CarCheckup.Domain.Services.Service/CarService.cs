@@ -13,23 +13,23 @@ namespace CarCheckup.Domain.Services.Service;
 public class CarService(ICarRepository carRepository) : ICarService
 {
     private readonly ICarRepository _carRepository = carRepository;
-    public int Create(Car car)
+    public async Task<int> Create(Car car, CancellationToken cancellationToken)
     {
-        return _carRepository.Create(car);
+        return await _carRepository.Create(car, cancellationToken);
     }
 
-    public GetCarDto? GetById(int id)
+    public async Task<GetCarDto?> GetById(int id, CancellationToken cancellationToken)
     {
-        return _carRepository.GetById(id);
+        return await _carRepository.GetById(id, cancellationToken);
     }
 
-    public CarDto? Get(int id)
+    public async Task<CarDto?> Get(int id, CancellationToken cancellationToken)
     {
-        return _carRepository.Get(id);
+        return await _carRepository.Get(id, cancellationToken);
     }
 
-    public int GetCarId(string plate)
+    public async Task<int> GetCarId(string plate, CancellationToken cancellationToken)
     {
-        return _carRepository.GetCarId(plate);
+        return await _carRepository.GetCarId(plate, cancellationToken);
     }
 }

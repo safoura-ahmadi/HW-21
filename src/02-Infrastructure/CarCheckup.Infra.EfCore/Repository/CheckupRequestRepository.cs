@@ -11,12 +11,12 @@ namespace CarCheckup.Infra.EfCore.Repository;
 public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) : ICheckupRequestRepository
 {
     private readonly CarCheckupDbContext _context = carCheckupDbContext;
-    public bool Create(CheckupRequest checkupRequest)
+    public async Task<bool> Create(CheckupRequest checkupRequest, CancellationToken cancellationToken)
     {
         try
         {
-            _context.CheckupRequests.Add(checkupRequest);
-            _context.SaveChanges();
+            await _context.CheckupRequests.AddAsync(checkupRequest, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
         catch
@@ -24,43 +24,26 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
             return false;
         }
     }
-    public List<GetCheckupRequestDto> GeByCarModel(int modelId)
+    public async Task<List<GetCheckupRequestDto>> GeByCarModel(int modelId, CancellationToken cancellationToken)
     {
-        //return [.. _context.CheckupRequests.AsNoTracking()
-        //         .Where(cr => cr.TimeToDone == timeToDone)
-        //        .Include(cr => cr.Car)
-        //        .Include(c => c.Car.Model)
 
-
-        //return [.. _context.CheckupRequests.AsNoTracking()
-        //     .Select(cr => new GetCheckupRequestDto
-        //    {
-        //        Id = cr.Id,
-        //        Company = cr.Car.Company,
-        //        OwnerMeliCode = cr.Car.OwnerMeliCode,
-        //        ModelName = cr.Car.Model.Name,
-        //        Status = cr.Status,
-        //        TimeToDone = cr.TimeToDone,
-
-
-        //    }).Where(??)];
-        return [.. _context.CheckupRequests.AsNoTracking()
-            .Include(cr => cr.Car)
-            .ThenInclude(c => c.Model)
-            .Where(cr => cr.Car.ModelId == modelId)
-            .Select(cr => new GetCheckupRequestDto
-            {
-                Id = cr.Id,
-                Company = cr.Car.Company,
-                OwnerMeliCode = cr.Car.OwnerMeliCode,
-                ModelName = cr.Car.Model.Name,
-                Status = cr.Status,
-                TimeToDone = cr.TimeToDone,
-
-
-            })];
+        return await _context.CheckupRequests
+        .AsNoTracking()
+        .Include(cr => cr.Car)
+        .ThenInclude(c => c!.Model)
+        .Where(cr => cr.Car!.ModelId == modelId)
+        .Select(cr => new GetCheckupRequestDto
+        {
+            Id = cr.Id,
+            Company = cr.Car!.Company,
+            OwnerMeliCode = cr.Car.OwnerMeliCode,
+            ModelName = cr.Car.Model!.Name,
+            Status = cr.Status,
+            TimeToDone = cr.TimeToDone,
+        })
+        .ToListAsync(cancellationToken);
     }
-    public List<GetCheckupRequestDto> GetByDate(DateOnly timeToDone)
+    public async Task<List<GetCheckupRequestDto>> GetByDate(DateOnly timeToDone, CancellationToken cancellationToken)
     {
 
         //return [.. _context.CheckupRequests.AsNoTracking()
@@ -78,29 +61,31 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
 
 
         //        })];
-        return [.. _context.CheckupRequests.AsNoTracking()
-                 .Where(cr => cr.TimeToDone == timeToDone)
-                 .Select(cr => new GetCheckupRequestDto
-                 {
-                        Id = cr.Id,
-                        Company = cr.Car.Company,
-                        OwnerMeliCode = cr.Car.OwnerMeliCode,
-                        ModelName = cr.Car.Model.Name,
-                        Status = cr.Status,
-                        TimeToDone = cr.TimeToDone,
-
-
-                  })];
+        return await _context.CheckupRequests
+        .AsNoTracking()
+        .Where(cr => cr.TimeToDone == timeToDone)
+        .Include(cr => cr.Car)
+        .ThenInclude(c => c!.Model)
+        .Select(cr => new GetCheckupRequestDto
+        {
+            Id = cr.Id,
+            Company = cr.Car!.Company,
+            OwnerMeliCode = cr.Car.OwnerMeliCode,
+            ModelName = cr.Car.Model!.Name,
+            Status = cr.Status,
+            TimeToDone = cr.TimeToDone,
+        })
+        .ToListAsync(cancellationToken);
     }
-    public bool MarkAsAccepted(int id)
+    public async Task<bool> MarkAsAccepted(int id, CancellationToken cancellationToken)
     {
         try
         {
-            var item = _context.CheckupRequests.Find(id);
+            var item = await _context.CheckupRequests.FindAsync(id, cancellationToken);
             if (item == null)
                 return false;
             item.Status = CheckUpRequestStatusEnum.Accepted;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
         catch
@@ -109,7 +94,7 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
         }
 
     }
-    public DateOnly? GetLastCheckupDate(CarCompanyEnum carCompany)
+    public async Task<DateOnly?> GetLastCheckupDate(CarCompanyEnum carCompany, CancellationToken cancellationToken)
     {
         try
         {
@@ -117,10 +102,10 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
             //    .OrderByDescending(cr => cr.TimeToDone)
             //    .Select(cr => cr.TimeToDone)
             //    .FirstOrDefault();
-            var c = _context.CheckupRequests.AsNoTracking()
+            var c = await _context.CheckupRequests.AsNoTracking()
                 .OrderByDescending(cr => cr.TimeToDone)
-                .FirstOrDefault(cr => cr.Car.Company == carCompany);
-            var t = c.TimeToDone;
+                .FirstOrDefaultAsync(cr => cr.Car!.Company == carCompany, cancellationToken);
+            var t = c!.TimeToDone;
             return t;
         }
         catch
@@ -128,33 +113,30 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
             return null;
         }
     }
-    public int GetDailyCount(DateOnly date)
+    public async Task<int> GetDailyCount(DateOnly date, CancellationToken cancellationToken)
     {
         try
         {
-            //return _context.CheckupRequests
-            //    .AsNoTracking()
-            //    .Count(cr => cr.TimeToDone == date);
-            return _context.CheckupRequests.AsNoTracking().Where(cr => cr.TimeToDone == date).Count();
+
+            return await _context.CheckupRequests.AsNoTracking().Where(cr => cr.TimeToDone == date).CountAsync(cancellationToken);
         }
         catch
         {
             return 0;
         }
     }
-    public DateOnly GetLastCheckupDateByCar(int carId)
+    public async Task<DateOnly> GetLastCheckupDateByCar(int carId, CancellationToken cancellationToken)
     {
         try
         {
-            //return _context.CheckupRequests.AsNoTracking()
-            //  .Where(cr => cr.CarId == carId)
-            //  .OrderByDescending(cr => cr.TimeToDone)
-            //  .Select(cr => cr.TimeToDone)
-            //  .FirstOrDefault();
-            return _context.CheckupRequests.AsNoTracking()
-                
-                .Where(cr => cr.CarId == carId).OrderByDescending(cr => cr.TimeToDone).First()
-                .TimeToDone;
+            var lastCheckup = await _context.CheckupRequests
+            .AsNoTracking()
+            .Where(cr => cr.CarId == carId)
+            .OrderByDescending(cr => cr.TimeToDone)
+            .Select(cr => cr.TimeToDone)
+            .FirstOrDefaultAsync(cancellationToken);
+
+            return lastCheckup;
 
         }
         catch
@@ -162,40 +144,40 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
             return new(1, 1, 1);
         }
     }
-    public bool SetRequestsToIncompleted()
+    public async Task<bool> SetRequestsToIncompleted(CancellationToken cancellationToken)
     {
         try
         {
-            _context.CheckupRequests
-                .Where(cr => cr.TimeToDone < DateOnly.FromDateTime(DateTime.Now))
-                .ExecuteUpdate(update => update.SetProperty(cr => cr.Status, CheckUpRequestStatusEnum.Rejected));
+            await _context.CheckupRequests
+                 .Where(cr => cr.TimeToDone < DateOnly.FromDateTime(DateTime.Now))
+                 .ExecuteUpdateAsync(update => update.SetProperty(cr => cr.Status, CheckUpRequestStatusEnum.Rejected), cancellationToken);
             return true;
 
             // نیازی به SaveChanges نیست، ExecuteUpdate تغییرات را مستقیم در دیتابیس ذخیره می‌کند.
         }
-        catch (Exception ex)
+        catch
         {
             return false;
         }
     }
 
-    public List<GetCheckupRequestDto> GettAll()
+    public async Task<List<GetCheckupRequestDto>> GettAll(CancellationToken cancellationToken)
     {
-        return [.. _context.CheckupRequests.AsNoTracking()
-            .Select(cr => new GetCheckupRequestDto
-            {
-                Id = cr.Id,
-                ModelName = cr.Car.Model.Name,
-                OwnerMeliCode = cr.Car.OwnerMeliCode,
-                Company = cr.Car.Company,
-                Status = cr.Status,
-                TimeToDone = cr.TimeToDone
-            }
-
-            )];
+        return await _context.CheckupRequests
+       .AsNoTracking()
+       .Select(cr => new GetCheckupRequestDto
+       {
+           Id = cr.Id,
+           ModelName = cr.Car!.Model!.Name,
+           OwnerMeliCode = cr.Car.OwnerMeliCode,
+           Company = cr.Car.Company,
+           Status = cr.Status,
+           TimeToDone = cr.TimeToDone
+       })
+       .ToListAsync(cancellationToken);
     }
 
-    public bool MarkAsRejected(int id)
+    public async Task<bool> MarkAsRejected(int id, CancellationToken cancellationToken)
     {
         try
         {
@@ -203,9 +185,10 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
             //entry.Property(e => e.Status).CurrentValue = CheckUpRequestStatusEnum.InCompleted;
             //_context.SaveChanges(); 
             //return true;
-            var item = _context.CheckupRequests.Find(id);
-            item.Status = CheckUpRequestStatusEnum.Rejected;
-            _context.SaveChanges();
+            var item = await _context.CheckupRequests.FindAsync(id, cancellationToken);
+            if (item is not null)
+                item.Status = CheckUpRequestStatusEnum.Rejected;
+            await _context.SaveChangesAsync(cancellationToken);
             return true;
         }
         catch
@@ -214,22 +197,22 @@ public class CheckupRequestRepository(CarCheckupDbContext carCheckupDbContext) :
         }
     }
 
-    public GetCheckupRequestDto? GetByCarId(int id)
+    public async Task<GetCheckupRequestDto?> GetByCarId(int id, CancellationToken cancellationToken)
     {
-        return _context.CheckupRequests.AsNoTracking()
-            .Where(cr => cr.Car.Id == id).OrderByDescending(cr => cr.TimeToDone)
+        return await _context.CheckupRequests.AsNoTracking()
+            .Where(cr => cr.Car!.Id == id).OrderByDescending(cr => cr.TimeToDone)
             .Select(cr => new GetCheckupRequestDto
             {
 
                 Id = cr.Id,
-                ModelName = cr.Car.Model.Name,
-                 Plate = cr.Car.Plate,
+                ModelName = cr.Car!.Model!.Name,
+                Plate = cr.Car.Plate,
                 OwnerMeliCode = cr.Car.OwnerMeliCode,
                 Company = cr.Car.Company,
                 Status = cr.Status,
                 TimeToDone = cr.TimeToDone
             }
 
-            ).FirstOrDefault();
+            ).FirstOrDefaultAsync(cancellationToken);
     }
 }
