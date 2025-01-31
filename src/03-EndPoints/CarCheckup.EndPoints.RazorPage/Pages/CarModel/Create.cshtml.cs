@@ -1,9 +1,11 @@
 using CarCheckup.Domain.Core.Contarcts.AppService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CarCheckup.EndPoints.RazorPage.Pages.CarModel
 {
+    [Authorize]
     public class CreateModel(ICarModelAppService carModelAppService) : PageModel
     {
         private readonly ICarModelAppService _carModelAppService = carModelAppService;

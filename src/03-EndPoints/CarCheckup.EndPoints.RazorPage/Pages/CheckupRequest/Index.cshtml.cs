@@ -2,12 +2,14 @@ using CarCheckup.Domain.Core.Contarcts.AppService;
 using CarCheckup.Domain.Core.Contarcts.Service;
 using CarCheckup.Domain.Core.Dtos.CheckupRequest;
 using CarCheckup.Domain.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Globalization;
 
 namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
 {
+    [Authorize]
     public class IndexModel(ICheckupRequestAppService checkupRequestAppService) : PageModel
     {
         private readonly ICheckupRequestAppService _checkupRequestAppService = checkupRequestAppService;

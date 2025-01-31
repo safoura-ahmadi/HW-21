@@ -1,10 +1,12 @@
 using CarCheckup.Domain.Core.Contarcts.AppService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CarCheckup.EndPoints.RazorPage.Pages.CarModel
 {
+    [Authorize]
     public class DeleteModel(ICarModelAppService carModelAppService) : PageModel
     {
         private readonly ICarModelAppService _carModelAppService = carModelAppService;

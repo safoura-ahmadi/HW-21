@@ -1,9 +1,11 @@
 using CarCheckup.Domain.Core.Contarcts.AppService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CarCheckup.EndPoints.RazorPage.Pages.CheckupRequest
 {
+    [Authorize]
     public class MarkAsRejectedModel(ICheckupRequestAppService checkupRequestAppService) : PageModel
     {
         private readonly ICheckupRequestAppService _checkupRequestAppService = checkupRequestAppService;

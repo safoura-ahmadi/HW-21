@@ -1,12 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+
 
 namespace CarCheckup.Domain.Core.Entities;
 
-public class Operator
+public class Operator : IdentityUser<int>
 {
-    public int Id { get; set; }
-    [Required(ErrorMessage = "وارد کردن نام کاربری الزامی است")]
-    public required string Username { get; set; }
-    [Required(ErrorMessage = "وارد کردن نام کاربری الزامی است")]
-    public required string Password { get; set; }
 }
